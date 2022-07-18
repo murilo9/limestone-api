@@ -1,17 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseService } from './database.service';
-import { MongoClient, Db } from 'mongodb';
+import { DatabaseServiceMock } from './database.service.mock';
 
 describe('BoardsService', () => {
   let service: DatabaseService;
-  let mongoClient: MongoClient;
 
   beforeEach(async () => {
-    mongoClient = new MongoClient(
-      'mongodb://limestone:123@localhost:27017/limestone-dev',
-    );
-    await mongoClient.connect();
-    const databaseServiceMock = new DatabaseService(mongoClient);
+    const databaseServiceMock = new DatabaseServiceMock();
     const module: TestingModule = await Test.createTestingModule({
       providers: [{ provide: DatabaseService, useValue: databaseServiceMock }],
     }).compile();
@@ -19,11 +14,25 @@ describe('BoardsService', () => {
     service = module.get<DatabaseService>(DatabaseService);
   });
 
-  afterEach(async () => {
-    await mongoClient.close();
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should have findOne method working', () => {
+    const findOne = jest.spyOn(service, 'findOne');
+    const filter = { foo: 'bar' };
+    service.findOne('foos', filter);
+    expect(findOne).toHaveBeenCalledWith('foos', filter);
+  });
+
+  it('should have findMany method working', () => {
+    const findOne = jest.spyOn(service, 'findOne');
+    const filter = { bar: 'baz' };
+    service.findOne('bars', filter);
+    expect(findOne).toHaveBeenCalledWith('bars', filter);
   });
 });
