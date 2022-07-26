@@ -20,12 +20,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('/signup')
-  signUp(@Body() signUpDto: SignUpDto) {
+  signUp(@Body(new ValidationPipe()) signUpDto: SignUpDto) {
     return this.usersService.signUp(signUpDto);
   }
 
   @Post('/signin')
-  signIn(@Body() signInDto: SignInDto) {
+  signIn(@Body(new ValidationPipe()) signInDto: SignInDto) {
     return this.usersService.signIn(signInDto);
   }
 
@@ -45,7 +45,10 @@ export class UsersController {
   }
 
   @Put('/users')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 

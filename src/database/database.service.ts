@@ -50,6 +50,8 @@ export class DatabaseService {
     );
     const entityInserted = {
       ...entity,
+      created: new Date(),
+      updated: new Date(),
       _id: query.insertedId.toString(),
     };
     return entityInserted;
@@ -61,7 +63,10 @@ export class DatabaseService {
     filter: Filter<T>,
   ): Promise<WithId<T>> {
     const collection = this.db.collection<T>(collectionName);
-    const query = await collection.findOneAndUpdate(filter, entity);
+    const query = await collection.findOneAndUpdate(filter, {
+      ...entity,
+      updated: new Date(),
+    });
     return query.value;
   }
 
@@ -71,7 +76,7 @@ export class DatabaseService {
     filter: Filter<T>,
   ): Promise<WithId<T>[]> {
     const collection = this.db.collection<T>(collectionName);
-    await collection.updateMany(filter, entity);
+    await collection.updateMany(filter, { ...entity, updated: new Date() });
     const updatedEntities = await collection.find(filter).toArray();
     return updatedEntities;
   }

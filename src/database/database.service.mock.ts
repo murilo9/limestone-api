@@ -9,14 +9,14 @@ export class DatabaseServiceMock {
     collectionName: string,
     filter: Filter<T>,
   ): Promise<WithId<T> | null> {
-    return null;
+    return {} as WithId<T>;
   }
 
   async findMany<T>(
     collectionName: string,
     filter: Filter<T>,
   ): Promise<WithId<T>[]> {
-    return [];
+    return [{}] as WithId<T>[];
   }
 
   async insertOne<T>(

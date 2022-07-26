@@ -16,6 +16,7 @@ import { DatabaseService } from './database.service';
       useFactory: async (configService: ConfigService) => {
         const MONGODB_URI =
           configService.get('MONGODB_URI') + '?connectTimeoutMS=4000';
+        console.log('MONGODB_URI', MONGODB_URI);
         const client = new MongoClient(MONGODB_URI);
         try {
           console.log('connecting to database...');
