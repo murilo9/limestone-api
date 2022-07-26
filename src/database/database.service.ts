@@ -58,7 +58,7 @@ export class DatabaseService {
   async updateOne<T>(
     collectionName: string,
     entity: T,
-    filter: T,
+    filter: Filter<T>,
   ): Promise<WithId<T>> {
     const collection = this.db.collection<T>(collectionName);
     const query = await collection.findOneAndUpdate(filter, entity);
@@ -68,7 +68,7 @@ export class DatabaseService {
   async updateMany<T>(
     collectionName: string,
     entity: T,
-    filter: T,
+    filter: Filter<T>,
   ): Promise<WithId<T>[]> {
     const collection = this.db.collection<T>(collectionName);
     await collection.updateMany(filter, entity);

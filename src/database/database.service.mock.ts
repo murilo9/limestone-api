@@ -5,8 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class DatabaseServiceMock {
-  constructor() {}
-
   async findOne<T>(
     collectionName: string,
     filter: Filter<T>,
@@ -35,19 +33,19 @@ export class DatabaseServiceMock {
   async updateOne<T>(
     collectionName: string,
     entity: T,
-    filter: T,
+    filter: Filter<T>,
   ): Promise<WithId<T>> {
     const entityUpdated = {
       ...entity,
       _id: uuidv4(),
     };
-    return entityUpdated as WithId<T>;
+    return entityUpdated as unknown as WithId<T>;
   }
 
   async updateMany<T>(
     collectionName: string,
     entity: T,
-    filter: T,
+    filter: Filter<T>,
   ): Promise<WithId<T>[]> {
     const updatedEntities = [];
     return updatedEntities;
