@@ -2,10 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
 import { DatabaseServiceMock } from '../database/database.service.mock';
+import { UserRole } from './types/user-role';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
-  let service: UsersService;
+  let usersService: UsersService;
+  let databaseService: DatabaseService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,7 +17,8 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    usersService = module.get<UsersService>(UsersService);
+    databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
   describe('method: signUp', () => {
@@ -28,7 +31,7 @@ describe('UsersService', () => {
       passwordAgain: '',
     };
 
-    it('should sign up', async () => {
+    beforeEach(() => {
       signUpForm = {
         firstName: 'John',
         lastName: 'Doe',
@@ -37,16 +40,68 @@ describe('UsersService', () => {
         password: 'John#123',
         passwordAgain: 'John#123',
       };
+    });
+
+    it('should return the expected result', async () => {
+      // Arrange
       const expectedResult = 'Account created successfully.';
-      const result = await service.signUp(signUpForm);
+      // Act
+      const result = await usersService.signUp(signUpForm);
+      // Assert
       expect(result).toBe(expectedResult);
+    });
+
+    it('should call database insertOne method passing the user', async () => {
+      // Arrange
+      const customId = 'custom-id';
+      const insertOne = jest.spyOn(databaseService, 'insertOne');
+      const { email, firstName, lastName } = signUpForm;
+      const expectedUser = {
+        email,
+        firstName,
+        lastName,
+        role: UserRole.superadmin,
+        verified: false,
+        verifyId: customId,
+        active: true,
+        boardsPermissions: {
+          create: true,
+          update: true,
+          delete: true,
+        },
+        notificationOptions: {
+          allBoards: {
+            create: true,
+            update: true,
+            insertMe: true,
+            removeMe: true,
+          },
+          myCards: {
+            create: true,
+            update: true,
+            delete: true,
+          },
+          myBoardCards: {
+            create: true,
+            update: true,
+            delete: true,
+          },
+        },
+      };
+      // Act
+      await usersService.signUp(signUpForm, customId);
+      // Assert
+      expect(insertOne).toBeCalledWith('users', expectedUser);
     });
   });
 
   describe('method: verify', () => {
     it('should verify', async () => {
-      const result = await service.verify('verifyId');
+      // Arrange
       const expectedResult = 'Account verified successfully';
+      // Act
+      const result = await usersService.verify('verifyId');
+      // Assert
       expect(result).toBe(expectedResult);
     });
   });
