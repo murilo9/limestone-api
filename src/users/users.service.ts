@@ -20,7 +20,7 @@ export class UsersService {
     @Inject(DatabaseService) private databaseService: DatabaseService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto) {
+  async signUp(signUpDto: SignUpDto, customId?: string) {
     const { email, firstName, lastName } = signUpDto;
     // TODO: check if email is already registered
 
@@ -30,7 +30,7 @@ export class UsersService {
       lastName,
       role: UserRole.superadmin,
       verified: false,
-      verifyId: uuid(),
+      verifyId: customId || uuid(),
       active: true,
       boardsPermissions: {
         create: true,
