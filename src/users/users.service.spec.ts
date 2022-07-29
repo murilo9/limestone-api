@@ -104,5 +104,35 @@ describe('UsersService', () => {
       // Assert
       expect(result).toBe(expectedResult);
     });
+
+    it('should search verified user', async () => {
+      // Arrange
+      const userToVerify = {
+        verifyId: 'some-verify-id',
+      };
+      const findOne = jest.spyOn(databaseService, 'findOne');
+      // Act
+      await usersService.verify(userToVerify.verifyId);
+      // Assert
+      expect(findOne).toBeCalledWith('users', userToVerify);
+    });
+
+    it("should set user's verified attribute to true and verifyId to empty string", async () => {
+      // Arrange
+      const userToVerify = {
+        verifyId: 'some-verify-id',
+      };
+      const updatedUser = {
+        verified: true,
+        verifyId: '',
+      };
+      const updateOne = jest.spyOn(databaseService, 'updateOne');
+      // Act
+      await usersService.verify(userToVerify.verifyId);
+      // Assert
+      expect(updateOne).toBeCalledWith('users', updatedUser, {
+        _id: undefined,
+      });
+    });
   });
 });
