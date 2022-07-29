@@ -29,6 +29,7 @@ export class UsersService {
       firstName,
       lastName,
       role: UserRole.superadmin,
+      createdBy: null,
       verified: false,
       verifyId: customId || uuid(),
       active: true,

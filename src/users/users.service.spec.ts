@@ -61,6 +61,7 @@ describe('UsersService', () => {
         firstName,
         lastName,
         role: UserRole.superadmin,
+        createdBy: null,
         verified: false,
         verifyId: customId,
         active: true,

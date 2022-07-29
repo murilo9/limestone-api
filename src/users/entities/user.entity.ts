@@ -7,6 +7,7 @@ export interface User extends PersistentEntity {
   firstName: string;
   lastName: string;
   role: UserRole;
+  createdBy: string | null;
   verified: boolean;
   verifyId: string;
   active: boolean;
