@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
@@ -13,12 +14,17 @@ describe('UsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
+        ConfigService,
         { provide: DatabaseService, useValue: new DatabaseServiceMock() },
       ],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('method: signUp', () => {
@@ -31,7 +37,7 @@ describe('UsersService', () => {
       passwordAgain: '',
     };
 
-    beforeEach(() => {
+    beforeEach(async () => {
       signUpForm = {
         firstName: 'John',
         lastName: 'Doe',
@@ -51,9 +57,8 @@ describe('UsersService', () => {
       expect(result).toBe(expectedResult);
     });
 
-    it('should call database insertOne method passing the user', async () => {
+    it('should insert the user on database', async () => {
       // Arrange
-      const customId = 'custom-id';
       const insertOne = jest.spyOn(databaseService, 'insertOne');
       const { email, firstName, lastName } = signUpForm;
       const expectedUser = {
@@ -63,7 +68,7 @@ describe('UsersService', () => {
         role: UserRole.superadmin,
         createdBy: null,
         verified: false,
-        verifyId: customId,
+        verifyId: 'some-verify-id',
         active: true,
         boardsPermissions: {
           create: true,
@@ -90,9 +95,22 @@ describe('UsersService', () => {
         },
       };
       // Act
-      await usersService.signUp(signUpForm, customId);
+      await usersService.signUp(signUpForm);
       // Assert
       expect(insertOne).toBeCalledWith('users', expectedUser);
+    });
+
+    it('should insert user password on database', async () => {
+      // Arrange
+      const insertOne = jest.spyOn(databaseService, 'insertOne');
+      const expectedPassword = {
+        user: 'some-user-id',
+        hash: 'some-hash',
+      };
+      // Act
+      await usersService.signUp(signUpForm);
+      // Assert
+      expect(insertOne).toBeCalledWith('passwords', expectedPassword);
     });
   });
 

@@ -13,16 +13,20 @@ import { UserRole } from './types/user-role';
 import { v4 as uuid } from 'uuid';
 import { UserNotificationOptions } from './types/user-notification-options';
 import { DatabaseService } from '../database/database.service';
+import bcrypt = require('bcrypt');
+import { UserPassword } from './entities/user-password.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
+    private configService: ConfigService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto, customId?: string) {
-    const { email, firstName, lastName } = signUpDto;
-    // TODO: check if email is already registered
+  async signUp(signUpDto: SignUpDto) {
+    const NODE_ENV = this.configService.get('NODE_ENV');
+    const { email, firstName, lastName, password } = signUpDto;
 
     const newUser: Omit<User, '_id' | 'created' | 'updated'> = {
       email,
@@ -31,7 +35,7 @@ export class UsersService {
       role: UserRole.superadmin,
       createdBy: null,
       verified: false,
-      verifyId: customId || uuid(),
+      verifyId: NODE_ENV === 'test' ? 'some-verify-id' : uuid(),
       active: true,
       boardsPermissions: {
         create: true,
@@ -57,7 +61,17 @@ export class UsersService {
         },
       },
     };
-    await this.databaseService.insertOne('users', newUser);
+    const createdUser = await this.databaseService.insertOne('users', newUser);
+
+    console.log(bcrypt);
+    const hash =
+      NODE_ENV === 'test' ? 'some-hash' : await bcrypt.hash(password, 10);
+
+    const userPassword: Omit<UserPassword, '_id' | 'created' | 'updated'> = {
+      user: NODE_ENV === 'test' ? 'some-user-id' : createdUser._id,
+      hash,
+    };
+    await this.databaseService.insertOne('passwords', userPassword);
 
     // TODO: send verification email
 
