@@ -10,7 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { SignInDto } from './dto/signin.dto';
+import { SignInDto } from '../auth/dto/signin.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -22,11 +22,6 @@ export class UsersController {
   @Post('/signup')
   signUp(@Body(new ValidationPipe()) signUpDto: SignUpDto) {
     return this.usersService.signUp(signUpDto);
-  }
-
-  @Post('/signin')
-  signIn(@Body(new ValidationPipe()) signInDto: SignInDto) {
-    return this.usersService.signIn(signInDto);
   }
 
   @Post('/verify/:id')

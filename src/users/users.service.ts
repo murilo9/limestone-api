@@ -1,17 +1,10 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { SignInDto } from './dto/signin.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserRole } from './types/user-role';
 import { v4 as uuid } from 'uuid';
-import { UserNotificationOptions } from './types/user-notification-options';
 import { DatabaseService } from '../database/database.service';
 import bcrypt = require('bcrypt');
 import { UserPassword } from './entities/user-password.entity';
@@ -63,7 +56,6 @@ export class UsersService {
     };
     const createdUser = await this.databaseService.insertOne('users', newUser);
 
-    console.log(bcrypt);
     const hash =
       NODE_ENV === 'test' ? 'some-hash' : await bcrypt.hash(password, 10);
 
@@ -76,10 +68,6 @@ export class UsersService {
     // TODO: send verification email
 
     return 'Account created successfully.';
-  }
-
-  signIn(signInDto: SignInDto) {
-    return 'This action signs in a user';
   }
 
   async verify(verifyId: string) {
