@@ -11,10 +11,5 @@ export interface User extends PersistentEntity {
   verified: boolean;
   verifyId: string;
   active: boolean;
-  boardsPermissions: {
-    create: boolean;
-    update: boolean;
-    delete: boolean;
-  };
   notificationOptions: UserNotificationOptions;
 }

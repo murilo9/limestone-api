@@ -1,0 +1,6 @@
+There are 2 kinds of roles:
+
+- Admin - Can't be deleted.
+- User - Can be deleted.
+
+All users may create boards. Users' permissions regarding cards are configured per board.

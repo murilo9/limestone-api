@@ -3,8 +3,8 @@ import { BoardColumn } from './board-column.entity';
 
 export interface Board extends PersistentEntity {
   title: string;
-  superAdmin: string;
-  creator: string;
+  owner: string;
+  createdBy: string;
   permissions: {
     // Which users (IDs) can do what on this board
     createCard: string[];
