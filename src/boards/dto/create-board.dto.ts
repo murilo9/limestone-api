@@ -4,7 +4,7 @@ export class CreateBoardDto {
   @IsString()
   title: string;
   @IsUUID()
-  superadmin: string;
+  admin: string;
   @IsArray()
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
