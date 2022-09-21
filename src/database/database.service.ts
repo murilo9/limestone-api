@@ -5,6 +5,7 @@ import {
   Filter,
   MongoClient,
   OptionalUnlessRequiredId,
+  UpdateFilter,
   WithId,
 } from 'mongodb';
 
@@ -63,9 +64,12 @@ export class DatabaseService {
     filter: Filter<T>,
   ): Promise<WithId<T>> {
     const collection = this.db.collection<T>(collectionName);
-    const query = await collection.findOneAndUpdate(filter, {
+    const updateFilter = {
       ...entity,
       updated: new Date(),
+    } as any;
+    const query = await collection.findOneAndUpdate(filter, {
+      $set: updateFilter,
     });
     return query.value;
   }
@@ -76,7 +80,10 @@ export class DatabaseService {
     filter: Filter<T>,
   ): Promise<WithId<T>[]> {
     const collection = this.db.collection<T>(collectionName);
-    await collection.updateMany(filter, { ...entity, updated: new Date() });
+    const updateFilter = { ...entity, updated: new Date() } as any;
+    await collection.updateMany(filter, {
+      $set: updateFilter,
+    });
     const updatedEntities = await collection.find(filter).toArray();
     return updatedEntities;
   }
