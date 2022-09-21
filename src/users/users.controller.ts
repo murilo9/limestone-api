@@ -8,12 +8,14 @@ import {
   Delete,
   Put,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInDto } from '../auth/dto/signin.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { IdentityGuard } from 'src/auth/identity.guard';
 
 @Controller()
 export class UsersController {
@@ -29,6 +31,7 @@ export class UsersController {
     return this.usersService.verify(id);
   }
 
+  @UseGuards(IdentityGuard)
   @Get('/users')
   getAll() {
     return this.usersService.getAll();
