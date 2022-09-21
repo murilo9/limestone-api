@@ -27,14 +27,12 @@ describe('UsersService', () => {
     jest.restoreAllMocks();
   });
 
-  describe('method: signUp', () => {
+  describe('method: create', () => {
     let signUpForm = {
       firstName: '',
       lastName: '',
       email: '',
-      emailAgain: '',
       password: '',
-      passwordAgain: '',
     };
 
     beforeEach(async () => {
@@ -42,9 +40,7 @@ describe('UsersService', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@email.com',
-        emailAgain: 'john.doe@email.com',
         password: 'John#123',
-        passwordAgain: 'John#123',
       };
     });
 
@@ -52,7 +48,7 @@ describe('UsersService', () => {
       // Arrange
       const expectedResult = 'Account created successfully.';
       // Act
-      const result = await usersService.signUp(signUpForm);
+      const result = await usersService.create(signUpForm);
       // Assert
       expect(result).toBe(expectedResult);
     });
@@ -90,7 +86,7 @@ describe('UsersService', () => {
         },
       };
       // Act
-      await usersService.signUp(signUpForm);
+      await usersService.create(signUpForm);
       // Assert
       expect(insertOne).toBeCalledWith('users', expectedUser);
     });
@@ -103,7 +99,7 @@ describe('UsersService', () => {
         hash: 'some-hash',
       };
       // Act
-      await usersService.signUp(signUpForm);
+      await usersService.create(signUpForm);
       // Assert
       expect(insertOne).toBeCalledWith('passwords', expectedPassword);
     });

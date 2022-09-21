@@ -35,7 +35,7 @@ describe('AuthService', () => {
       firstName: 'John',
       lastName: 'Doe',
       role: UserRole.admin,
-      createdBy: '',
+      createdBy: null,
       verified: true,
       verifyId: '',
       active: false,

@@ -26,7 +26,7 @@ describe('IdentityGuard', () => {
       firstName: '',
       lastName: '',
       role: UserRole.admin,
-      createdBy: '',
+      createdBy: null,
       verified: false,
       verifyId: '',
       active: false,
@@ -75,7 +75,7 @@ describe('IdentityGuard', () => {
 
   it('should throw when access_token is invalid', async () => {
     // Arrange
-    access_token = sign({ some: 'invalid data' }, JWT_SECRET);
+    access_token = 'some-invalid-token';
     request = {
       headers: {
         access_token,
@@ -87,7 +87,7 @@ describe('IdentityGuard', () => {
       }),
     });
     const expectedError = new UnauthorizedException(
-      'You do not have permission to do that',
+      'Could not validate access_token.',
     );
     // Act
     const result = async () =>
@@ -107,7 +107,7 @@ describe('IdentityGuard', () => {
       }),
     });
     const expectedError = new UnauthorizedException(
-      'You do not have permission to do that',
+      'Could not validate access_token.',
     );
     // Act
     const result = async () =>

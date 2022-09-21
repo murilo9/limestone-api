@@ -1,6 +1,4 @@
-import { IsDefined, IsEmail, IsString } from 'class-validator';
-import { UserRole } from '../types/user-role';
-
+import { IsDefined, IsEmail, IsString, IsUUID } from 'class-validator';
 export class CreateUserDto {
   @IsString()
   firstName: string;
@@ -9,5 +7,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
   @IsString()
-  role: UserRole.admin | UserRole.member;
+  password: string;
+  @IsUUID()
+  adminId?: string;
 }

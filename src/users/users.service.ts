@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,31 +9,31 @@ import { DatabaseService } from '../database/database.service';
 import bcrypt = require('bcrypt');
 import { UserPassword } from './entities/user-password.entity';
 import { ConfigService } from '@nestjs/config';
+import { ObjectId } from 'mongodb';
 
-@Injectable()
 export class UsersService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
     private configService: ConfigService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto) {
+  async create(signUpDto: CreateUserDto, member?: boolean) {
     const NODE_ENV = this.configService.get('NODE_ENV');
-    const { email, firstName, lastName, password } = signUpDto;
+    const { email, firstName, lastName, password, adminId } = signUpDto;
 
     const newUser: Omit<User, '_id' | 'created' | 'updated'> = {
       email,
       firstName,
       lastName,
-      role: UserRole.admin,
-      createdBy: null,
+      role: member ? UserRole.member : UserRole.admin,
+      createdBy: member ? new ObjectId(adminId) : null,
       verified: false,
       verifyId: NODE_ENV === 'test' ? 'some-verify-id' : uuid(),
       active: true,
       notificationOptions: {
         allBoards: {
-          onCreate: true,
-          onUpdate: true,
+          onCreate: !member,
+          onUpdate: !member,
           onInsertMe: true,
           onRemoveMe: true,
         },
@@ -82,10 +82,6 @@ export class UsersService {
 
   getAll() {
     return `This action returns all users from the superadmin`;
-  }
-
-  create(createUserDto: CreateUserDto) {
-    return 'This action creates a member/admin user';
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
