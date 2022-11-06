@@ -5,6 +5,7 @@ import {
   Filter,
   MongoClient,
   OptionalUnlessRequiredId,
+  UpdateFilter,
   WithId,
 } from 'mongodb';
 
@@ -82,7 +83,7 @@ export class DatabaseService {
 
   async updateMany<T>(
     collectionName: string,
-    entity: T,
+    entity: UpdateFilter<T>,
     filter: Filter<T>,
   ): Promise<WithId<T>[]> {
     const collection = this.db.collection<T>(collectionName);

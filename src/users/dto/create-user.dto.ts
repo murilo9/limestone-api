@@ -8,6 +8,4 @@ export class CreateUserDto {
   email: string;
   @IsString()
   password: string;
-  @IsUUID()
-  adminId?: string;
 }

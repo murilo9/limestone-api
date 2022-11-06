@@ -17,23 +17,28 @@ export class UsersService {
     private configService: ConfigService,
   ) {}
 
-  async create(signUpDto: CreateUserDto, member?: boolean) {
+  /**
+   * Creates an admin or member user.
+   * @param signUpDto Sign up form
+   * @param adminId If present, creates a member user instead of an admin user
+   * @returns
+   */
+  async create(signUpDto: CreateUserDto, adminId?: ObjectId) {
     const NODE_ENV = this.configService.get('NODE_ENV');
-    const { email, firstName, lastName, password, adminId } = signUpDto;
-
+    const { email, firstName, lastName, password } = signUpDto;
     const newUser: Omit<User, '_id' | 'created' | 'updated'> = {
       email,
       firstName,
       lastName,
-      role: member ? UserRole.member : UserRole.admin,
-      createdBy: member ? new ObjectId(adminId) : null,
+      role: adminId ? UserRole.MEMBER : UserRole.ADMIN,
+      createdBy: adminId ? new ObjectId(adminId) : null,
       verified: false,
       verifyId: NODE_ENV === 'test' ? 'some-verify-id' : uuid(),
       active: true,
       notificationOptions: {
         allBoards: {
-          onCreate: !member,
-          onUpdate: !member,
+          onCreate: !adminId,
+          onUpdate: !adminId,
           onInsertMe: true,
           onRemoveMe: true,
         },
@@ -80,15 +85,62 @@ export class UsersService {
     }
   }
 
-  getAll() {
-    return `This action returns all users from the superadmin`;
+  async getAll(adminId: string) {
+    const adminUsers = await this.databaseService.findMany('users', {
+      createdBy: new ObjectId(adminId),
+    });
+    return adminUsers;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return 'This action updates a user';
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const userToUpdate = await this.databaseService.findOne<User>('users', {
+      _id: new ObjectId(id),
+    });
+    if (userToUpdate) {
+      Object.keys(updateUserDto).forEach((key) => {
+        userToUpdate[key] = updateUserDto[key];
+      });
+      const updateResult = await this.databaseService.updateOne(
+        'users',
+        userToUpdate,
+        {
+          _id: new ObjectId(id),
+        },
+      );
+      return updateResult;
+    } else {
+      throw new NotFoundException();
+    }
   }
 
-  deactivate(id: string) {
-    return `This action deactivates a user`;
+  async deactivate(id: string) {
+    const userToDeactivate = await this.databaseService.findOne<User>('users', {
+      _id: new ObjectId(id),
+    });
+    if (!userToDeactivate) {
+      throw new NotFoundException();
+    }
+    // If user is already deactivated
+    if (!userToDeactivate.active) {
+      return 'User was deactivated already';
+    }
+    const deactivatingAdminUser = userToDeactivate.role === UserRole.ADMIN;
+    // If deactivating an admin user, deactivate all their members as well
+    if (deactivatingAdminUser) {
+      await this.databaseService.updateMany<User>(
+        'users',
+        { active: false },
+        {
+          createdBy: new ObjectId(id),
+        },
+      );
+    }
+    // Finally, deactivate user
+    await this.databaseService.updateOne(
+      'users',
+      { active: false },
+      { _id: new ObjectId(id) },
+    );
+    return `User deactivated successfully`;
   }
 }

@@ -7,8 +7,8 @@ import {
   Param,
   Delete,
   Put,
-  ValidationPipe,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignUpDto } from './dto/signup.dto';
@@ -17,6 +17,11 @@ import { UsersService } from './users.service';
 import { IdentityGuard } from 'src/auth/identity.guard';
 import { CreateUserGuard } from './create-user.guard';
 import { CreateMemberUserGuard } from './create-member-user.guard';
+import { UpdateUserGuard } from './update-user.guard';
+import { ValidationPipe } from 'src/common/pipes/validation.pipe';
+import { Request } from 'express';
+import { User } from './entities/user.entity';
+import { ObjectId } from 'mongodb';
 
 @Controller()
 export class UsersController {
@@ -35,17 +40,23 @@ export class UsersController {
 
   @UseGuards(IdentityGuard)
   @Get('/users')
-  getAll() {
-    return this.usersService.getAll();
+  getAll(@Req() request: { user: User }) {
+    const { user } = request;
+    const adminId = user.createdBy || user._id;
+    return this.usersService.getAll(adminId.toString());
   }
 
   @UseGuards(IdentityGuard, CreateUserGuard, CreateMemberUserGuard)
   @Post('/users')
-  createMember(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto, true);
+  createMember(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+    @Req() request: { adminId?: ObjectId },
+  ) {
+    return this.usersService.create(createUserDto, request.adminId);
   }
 
-  @Put('/users')
+  @UseGuards(IdentityGuard, UpdateUserGuard)
+  @Put('/users/:id')
   update(
     @Param('id') id: string,
     @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
@@ -53,6 +64,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @UseGuards(IdentityGuard, UpdateUserGuard)
   @Delete('/users/:id')
   remove(@Param('id') id: string) {
     return this.usersService.deactivate(id);
