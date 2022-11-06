@@ -61,7 +61,7 @@ describe('UsersService', () => {
         email,
         firstName,
         lastName,
-        role: UserRole.admin,
+        role: UserRole.ADMIN,
         createdBy: null,
         verified: false,
         verifyId: 'some-verify-id',

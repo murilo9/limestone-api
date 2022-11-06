@@ -25,7 +25,7 @@ describe('IdentityGuard', () => {
       email: '',
       firstName: '',
       lastName: '',
-      role: UserRole.admin,
+      role: UserRole.ADMIN,
       createdBy: null,
       verified: false,
       verifyId: '',

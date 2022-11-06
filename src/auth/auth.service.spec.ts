@@ -34,7 +34,7 @@ describe('AuthService', () => {
       email: 'john.doe@email.com',
       firstName: 'John',
       lastName: 'Doe',
-      role: UserRole.admin,
+      role: UserRole.ADMIN,
       createdBy: null,
       verified: true,
       verifyId: '',
