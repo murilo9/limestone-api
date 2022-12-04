@@ -6,37 +6,66 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  Put,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
+import { IdentityGuard } from 'src/auth/identity.guard';
+import { ValidationPipe } from 'src/common/pipes/validation.pipe';
+import { User } from '../users/entities/user.entity';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { DeleteBoardGuard } from './guards/delete-board.guard';
+import { UpdateBoardGuard } from './guards/update-board.guard';
 
 @Controller('boards')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
 
+  @UseGuards(IdentityGuard)
   @Post()
-  create(@Body() createBoardDto: CreateBoardDto) {
-    return this.boardsService.create(createBoardDto);
+  create(
+    @Body(new ValidationPipe()) createBoardDto: CreateBoardDto,
+    @Req() request: { user: User },
+  ) {
+    const { user } = request;
+    return this.boardsService.create(createBoardDto, user);
   }
 
+  @UseGuards(IdentityGuard)
   @Get()
-  findAll() {
-    return this.boardsService.findAll();
+  findAll(
+    @Req() request: { user: User },
+    @Query() query: { includeArchived?: string },
+  ) {
+    const { user } = request;
+    const adminId = user.createdBy || user._id;
+    return this.boardsService.getAll(
+      adminId.toString(),
+      Boolean(query.includeArchived),
+    );
   }
 
+  @UseGuards(IdentityGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.boardsService.findOne(+id);
+    return this.boardsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBoardDto: UpdateBoardDto) {
-    return this.boardsService.update(+id, updateBoardDto);
+  @UseGuards(IdentityGuard, UpdateBoardGuard)
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updateBoardDto: UpdateBoardDto,
+  ) {
+    return this.boardsService.update(id, updateBoardDto);
   }
 
+  @UseGuards(IdentityGuard, UpdateBoardGuard, DeleteBoardGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.boardsService.remove(+id);
+    return this.boardsService.delete(id);
   }
 }
