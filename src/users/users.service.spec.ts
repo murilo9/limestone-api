@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ObjectId } from 'mongodb';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
 import { DatabaseServiceMock } from '../database/database.service.mock';
@@ -53,7 +54,7 @@ describe('UsersService', () => {
       expect(result).toBe(expectedResult);
     });
 
-    it('should insert the user on database', async () => {
+    it('should insert the admin user on database', async () => {
       // Arrange
       const insertOne = jest.spyOn(databaseService, 'insertOne');
       const { email, firstName, lastName } = signUpForm;
@@ -87,6 +88,45 @@ describe('UsersService', () => {
       };
       // Act
       await usersService.create(signUpForm);
+      // Assert
+      expect(insertOne).toBeCalledWith('users', expectedUser);
+    });
+
+    it('should insert the member user on database', async () => {
+      // Arrange
+      const insertOne = jest.spyOn(databaseService, 'insertOne');
+      const { email, firstName, lastName } = signUpForm;
+      const adminId = new ObjectId(0);
+      const expectedUser = {
+        email,
+        firstName,
+        lastName,
+        role: UserRole.MEMBER,
+        createdBy: adminId,
+        verified: false,
+        verifyId: 'some-verify-id',
+        active: true,
+        notificationOptions: {
+          allBoards: {
+            onCreate: false,
+            onUpdate: false,
+            onInsertMe: true,
+            onRemoveMe: true,
+          },
+          myCards: {
+            onCreate: true,
+            onUpdate: true,
+            onDelete: true,
+          },
+          myBoardCards: {
+            onCreate: true,
+            onUpdate: true,
+            onDelete: true,
+          },
+        },
+      };
+      // Act
+      await usersService.create(signUpForm, adminId);
       // Assert
       expect(insertOne).toBeCalledWith('users', expectedUser);
     });
