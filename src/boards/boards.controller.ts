@@ -11,8 +11,8 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { IdentityGuard } from 'src/auth/identity.guard';
-import { ValidationPipe } from 'src/common/pipes/validation.pipe';
+import { IdentityGuard } from '../auth/identity.guard';
+import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { User } from '../users/entities/user.entity';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';

@@ -1,5 +1,5 @@
 import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { CardPriorities } from 'src/boards/types/card-priorities';
+import { CardPriorities } from '../../boards/types/card-priorities';
 
 export class CreateCardDto {
   @IsString()

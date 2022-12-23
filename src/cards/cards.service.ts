@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
-import { Board } from 'src/boards/entities/board.entity';
-import { DatabaseService } from 'src/database/database.service';
+import { Board } from '../boards/entities/board.entity';
+import { DatabaseService } from '../database/database.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { Card } from './entities/card.entity';

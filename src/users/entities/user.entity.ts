@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import PersistentEntity from 'src/common/types/persistent-entity';
+import PersistentEntity from '../../common/types/persistent-entity';
 import { UserNotificationOptions } from '../types/user-notification-options';
 import { UserRole } from '../types/user-role';
 

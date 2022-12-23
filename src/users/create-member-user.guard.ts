@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { Observable } from 'rxjs';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { User } from './entities/user.entity';

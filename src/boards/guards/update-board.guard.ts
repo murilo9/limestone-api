@@ -6,8 +6,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { DatabaseService } from 'src/database/database.service';
-import { User } from 'src/users/entities/user.entity';
+import { DatabaseService } from '../../database/database.service';
+import { User } from '../../users/entities/user.entity';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { Board } from '../entities/board.entity';
 
