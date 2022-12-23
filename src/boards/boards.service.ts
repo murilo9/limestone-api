@@ -19,7 +19,7 @@ export class BoardsService {
     const newBoard: Omit<Board, '_id' | 'created' | 'updated'> = {
       title,
       admin: new ObjectId(creator.createdBy || creator._id),
-      users,
+      users: users.map((user) => new ObjectId(user)),
       owner: new ObjectId(creator._id),
       columns: columns.map((columnTitle) => ({
         title: columnTitle,
@@ -60,6 +60,12 @@ export class BoardsService {
     Object.keys(updateBoardDto).forEach((key) => {
       boardToUpdate[key] = updateBoardDto[key];
     });
+    // Fill ObjectIDs
+    boardToUpdate.owner = new ObjectId(updateBoardDto.owner);
+    boardToUpdate.users = updateBoardDto.users.map(
+      (user) => new ObjectId(user),
+    );
+    // Save in database
     const updateResult = await this.databaseService.updateOne(
       'boards',
       boardToUpdate,

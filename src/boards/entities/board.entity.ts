@@ -7,6 +7,6 @@ export interface Board extends PersistentEntity {
   admin: ObjectId;
   owner: ObjectId;
   columns: BoardColumn[];
-  users: string[];
+  users: ObjectId[];
   archived: boolean;
 }

@@ -27,12 +27,20 @@ export class CardsService {
   }
 
   async update(cardId: string, updateCardDto: UpdateCardDto) {
-    const cardToUpdate = await this.databaseService.findOne('cards', {
+    const cardToUpdate = await this.databaseService.findOne<Card>('cards', {
       _id: new ObjectId(cardId),
     });
     Object.keys(updateCardDto).forEach((key) => {
       cardToUpdate[key] = updateCardDto[key];
     });
+    // Fill ObjectIDs
+    if (updateCardDto.assignee) {
+      cardToUpdate.assignee = new ObjectId(updateCardDto.assignee);
+    }
+    if (updateCardDto.columnId) {
+      cardToUpdate.columnId = new ObjectId(updateCardDto.columnId);
+    }
+    // Update in database
     const updateResult = await this.databaseService.updateOne(
       'cards',
       cardToUpdate,
