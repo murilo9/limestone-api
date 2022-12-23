@@ -10,13 +10,15 @@ import { UsersService } from './users.service';
 describe('UsersService', () => {
   let usersService: UsersService;
   let databaseService: DatabaseService;
+  let databaseServiceMock: DatabaseServiceMock;
 
   beforeEach(async () => {
+    databaseServiceMock = new DatabaseServiceMock();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         ConfigService,
-        { provide: DatabaseService, useValue: new DatabaseServiceMock() },
+        { provide: DatabaseService, useValue: databaseServiceMock },
       ],
     }).compile();
 
@@ -182,6 +184,100 @@ describe('UsersService', () => {
       // Assert
       expect(updateOne).toBeCalledWith('users', updatedUser, {
         _id: undefined,
+      });
+    });
+  });
+
+  describe('method: deactivate', () => {
+    let userMock: { _id: ObjectId; active: boolean; role?: UserRole };
+
+    describe('context: user is active', () => {
+      beforeEach(() => {
+        userMock = {
+          _id: new ObjectId(),
+          active: true,
+        };
+        jest
+          .spyOn(databaseServiceMock, 'findOne')
+          .mockImplementation(async () => userMock);
+      });
+
+      it('should report propperly', async () => {
+        // Arrange
+        const expectedResult = 'User deactivated successfully';
+        // Act
+        const result = await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(result).toBe(expectedResult);
+      });
+
+      it('should update user in database', async () => {
+        // Arrange
+        const updateOne = jest.spyOn(databaseService, 'updateOne');
+        // Act
+        await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(updateOne).toBeCalledWith(
+          'users',
+          { active: false },
+          { _id: userMock._id },
+        );
+      });
+
+      it('should deactivate member users when deactivating an admin', async () => {
+        // Arrange
+        userMock = {
+          ...userMock,
+          role: UserRole.ADMIN,
+        };
+        const updateMany = jest.spyOn(databaseService, 'updateMany');
+        // Act
+        await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(updateMany).toBeCalledWith(
+          'users',
+          { active: false },
+          { createdBy: userMock._id },
+        );
+      });
+    });
+
+    describe('context: user is inactive', () => {
+      beforeEach(() => {
+        userMock = {
+          _id: new ObjectId(),
+          active: false,
+        };
+        jest
+          .spyOn(databaseServiceMock, 'findOne')
+          .mockImplementation(async () => userMock);
+      });
+
+      it('should report propperly', async () => {
+        // Arrange
+        const expectedResult = 'User was deactivated already';
+        // Act
+        const result = await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(result).toBe(expectedResult);
+      });
+
+      it('should not call updateOne method', async () => {
+        // Arrange
+        const updateOne = jest.spyOn(databaseService, 'updateOne');
+        // Act
+        await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(updateOne).toBeCalledTimes(0);
+      });
+
+      it('should not call updateMany method', async () => {
+        // Arrange
+        const updateMany = jest.spyOn(databaseService, 'updateMany');
+        // Act
+        await usersService.deactivate(userMock._id.toString());
+        // Assert
+        expect(updateMany).toBeCalledTimes(0);
       });
     });
   });
