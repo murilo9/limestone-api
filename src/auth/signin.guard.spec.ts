@@ -28,7 +28,9 @@ describe('SignInGuard', () => {
 
   beforeEach(() => {
     databaseService = new DatabaseServiceMock();
-    signInGuard = new SignInGuard(databaseService as DatabaseService);
+    signInGuard = new SignInGuard(
+      databaseService as unknown as DatabaseService,
+    );
     request = {
       body: {
         email: 'john.doe@email.com',
