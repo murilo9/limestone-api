@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
+import { Card } from '../cards/entities/card.entity';
 import { DatabaseService } from '../database/database.service';
 import { User } from '../users/entities/user.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -47,7 +48,7 @@ export class BoardsService {
   }
 
   async findOne(id: string) {
-    const board = await this.databaseService.findMany('boards', {
+    const board = await this.databaseService.findOne('boards', {
       _id: new ObjectId(id),
     });
     return board;
@@ -65,6 +66,19 @@ export class BoardsService {
     boardToUpdate.users = updateBoardDto.users.map(
       (user) => new ObjectId(user),
     );
+    // If updating board columns
+    if (boardToUpdate.columns) {
+      for (let i = 0; i < boardToUpdate.columns.length; i++) {
+        const column = boardToUpdate.columns[i];
+        // Fill column ObjectId
+        column._id = new ObjectId(column._id);
+        // Update cardsCount
+        const cardCount = await this.databaseService.findMany<Card>('cards', {
+          columnId: column._id,
+        });
+        column.cardCount = cardCount.length;
+      }
+    }
     // Save in database
     const updateResult = await this.databaseService.updateOne(
       'boards',
