@@ -20,7 +20,26 @@ describe('CardsService', () => {
     service = module.get<CardsService>(CardsService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('method: create', () => {
+    it('should return the created card');
+    it('should insert the created card in the database');
+  });
+  describe('method: update', () => {
+    it('should return the updated card');
+    it('should update the card in the database');
+  });
+  describe('method: get', () => {
+    it('should return the card when it exists');
+    it('should return null when the card does not exist');
+    it('should search for the card in the database');
+  });
+  describe('method: getByColumn', () => {
+    it('should return an array of cards when cards exist');
+    it('should return an empty array when no cards exist with column id');
+    it('should return an empty array when column does not exist');
+  });
+  describe('method: delete', () => {
+    it('should return a scuccess message');
+    it('should delete the card in the database');
   });
 });

@@ -26,7 +26,8 @@ describe('BoardsService', () => {
   });
 
   describe('method: getAll', () => {
-    it('should return all boards');
+    it('should return all boards, if any board exist');
+    it('should return an empty array, if no boards exist');
     it('hould search for the boards in the database');
   });
   describe('method: findOne', () => {
