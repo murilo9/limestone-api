@@ -5,7 +5,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { DatabaseService } from '../../database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { SignUpDto } from './dto/signup.dto';
 
 /**

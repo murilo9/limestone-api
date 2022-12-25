@@ -20,7 +20,26 @@ describe('BoardsService', () => {
     service = module.get<BoardsService>(BoardsService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('method: create', () => {
+    it('should return the expected result');
+    it('should insert the new board in the database');
+  });
+
+  describe('method: getAll', () => {
+    it('should return all boards');
+    it('hould search for the boards in the database');
+  });
+  describe('method: findOne', () => {
+    it('should return the board when it exists');
+    it('should return null when the board does not exist');
+    it('should search for the boar in the database');
+  });
+  describe('method: update', () => {
+    it('should return the updated board');
+    it('should update the board in the database');
+  });
+  describe('method: delete', () => {
+    it('should return a successfull message');
+    it('should delete the board in the database');
   });
 });
