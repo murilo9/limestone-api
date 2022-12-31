@@ -14,10 +14,9 @@ import { User } from '../../users/entities/user.entity';
 
 /**
  * Blocks if:
- * - Either board or column don't exist
- * - Board does not beong to user or user's admin
+ * - Column don't exist
  */
-export class BoardAndColumnGuard implements CanActivate {
+export class ColumnGuard implements CanActivate {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
   ) {}
@@ -30,28 +29,17 @@ export class BoardAndColumnGuard implements CanActivate {
         columnId: string;
       };
     }>();
-    const { user, params } = request;
+    const { params } = request;
     const { boardId, columnId } = params;
-    // Verifies if board exist
     const board = await this.databaseService.findOne<Board>('boards', {
       _id: new ObjectId(boardId),
     });
-    if (!board) {
-      throw new NotFoundException('Board not found');
-    }
     // Verifies if column exist
     const column = board.columns.find(
       (column) => column._id.toString() === columnId,
     );
     if (!column) {
       throw new NotFoundException('Column not found');
-    }
-    // Verifies if board belongs to user or user's admin
-    const boardBelongsToUser = board.admin.toString() === user._id.toString();
-    const boardBelongsToUsersAdmin =
-      board.admin.toString() === user.createdBy?.toString();
-    if (!boardBelongsToUser && !boardBelongsToUsersAdmin) {
-      throw new UnauthorizedException('You lack permission to do that');
     }
     return true;
   }

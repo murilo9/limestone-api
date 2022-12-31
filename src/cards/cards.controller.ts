@@ -13,14 +13,15 @@ import { IdentityGuard } from '../auth/identity.guard';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { BoardAndColumnGuard } from './guards/board-and-column.guard';
+import { BoardGuard } from './guards/board.guard';
+import { ColumnGuard } from './guards/column.guard';
 import { UpdateCardGuard } from './guards/update-card.guard';
 
 @Controller('boards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
-  @UseGuards(IdentityGuard, BoardAndColumnGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
   @Post(':boardId/columns/:columnId/cards')
   create(
     @Body(new ValidationPipe()) createCardDto: CreateCardDto,
@@ -29,19 +30,19 @@ export class CardsController {
     return this.cardsService.create(createCardDto, columnId);
   }
 
-  @UseGuards(IdentityGuard, BoardAndColumnGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
   @Get(':boardId/columns/:columnId/cards')
   findByColumn(@Param('columnId') columnId: string) {
     return this.cardsService.getByColumn(columnId);
   }
 
-  @UseGuards(IdentityGuard, BoardAndColumnGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
   @Get(':boardId/columns/:columnId/cards/:cardId')
   findById(@Param('cardId') cardId: string) {
     return this.cardsService.get(cardId);
   }
 
-  @UseGuards(IdentityGuard, BoardAndColumnGuard, UpdateCardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, UpdateCardGuard)
   @Put(':boardId/columns/:columnId/cards/:cardId')
   update(
     @Param('cardId') cardId: string,
@@ -50,7 +51,7 @@ export class CardsController {
     return this.cardsService.update(cardId, updateCardDto);
   }
 
-  @UseGuards(IdentityGuard, BoardAndColumnGuard, UpdateCardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, UpdateCardGuard)
   @Delete(':boardId/columns/:columnId/cards/:cardId')
   delete(@Param('cardId') cardId: string) {
     return this.cardsService.delete(cardId);
