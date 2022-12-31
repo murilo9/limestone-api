@@ -46,13 +46,19 @@ export class DatabaseService {
     entity: T,
   ): Promise<T & { _id: string }> {
     const collection = this.db.collection<T>(collectionName);
-    const query = await collection.insertOne(
-      entity as OptionalUnlessRequiredId<T>,
-    );
-    const entityInserted = {
+    const entityToInsert = {
       ...entity,
       created: new Date(),
       updated: new Date(),
+    };
+    const query = await collection.insertOne(
+      entityToInsert as OptionalUnlessRequiredId<T> & {
+        created: Date;
+        updated: Date;
+      },
+    );
+    const entityInserted = {
+      ...entity,
       _id: query.insertedId.toString(),
     };
     return entityInserted;
