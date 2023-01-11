@@ -3,7 +3,6 @@ import { DatabaseService } from '../database/database.service';
 import { DatabaseServiceMock } from '../database/database.service.mock';
 import { AuthService } from './auth.service';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/types/user-role';
 import jwt = require('jsonwebtoken');
 import { ObjectId, WithId } from 'mongodb';
 jest.mock('jsonwebtoken', () => ({
@@ -34,7 +33,6 @@ describe('AuthService', () => {
       email: 'john.doe@email.com',
       firstName: 'John',
       lastName: 'Doe',
-      role: UserRole.ADMIN,
       createdBy: null,
       verified: true,
       verifyId: '',

@@ -8,7 +8,6 @@ import { ObjectId } from 'mongodb';
 import { DatabaseService } from '../database/database.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { UserRole } from './types/user-role';
 
 /**
  * Checks if user is either updating itself or a member of them.
@@ -30,7 +29,7 @@ export class UpdateUserGuard implements CanActivate {
     const userIsUpdatingSelf = user._id.toString() === params.id;
     let adminUserIsUpdatingMember = false;
     // Verifies if admin user is updating its member
-    if (user.role === UserRole.ADMIN) {
+    if (user.createdBy === null) {
       const adminMembers = await this.databaseService.findMany('users', {
         createdBy: new ObjectId(user._id),
       });

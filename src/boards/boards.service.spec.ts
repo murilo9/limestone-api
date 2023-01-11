@@ -6,7 +6,6 @@ import { DatabaseServiceMock } from '../database/database.service.mock';
 import { adminUser } from '../mocks/admin-user.mock';
 import { memberUser } from '../mocks/member-user.mock';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/types/user-role';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';

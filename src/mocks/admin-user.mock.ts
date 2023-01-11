@@ -1,12 +1,10 @@
 import { ObjectId } from 'mongodb';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/types/user-role';
 
 export const adminUser: User = {
   email: '',
   firstName: '',
   lastName: '',
-  role: UserRole.ADMIN,
   createdBy: null,
   verified: false,
   verifyId: '',

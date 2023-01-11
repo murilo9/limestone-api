@@ -1,13 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/types/user-role';
 import { adminUser } from './admin-user.mock';
 
 export const memberUser: User = {
   email: '',
   firstName: '',
   lastName: '',
-  role: UserRole.ADMIN,
   createdBy: adminUser._id,
   verified: false,
   verifyId: '',

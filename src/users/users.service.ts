@@ -3,7 +3,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { UserRole } from './types/user-role';
 import { v4 as uuid } from 'uuid';
 import { DatabaseService } from '../database/database.service';
 import bcrypt = require('bcrypt');
@@ -30,7 +29,6 @@ export class UsersService {
       email,
       firstName,
       lastName,
-      role: adminId ? UserRole.MEMBER : UserRole.ADMIN,
       createdBy: adminId ? new ObjectId(adminId) : null,
       verified: false,
       verifyId: NODE_ENV === 'test' ? 'some-verify-id' : uuid(),
@@ -124,7 +122,7 @@ export class UsersService {
     if (!userToDeactivate.active) {
       return 'User was deactivated already';
     }
-    const deactivatingAdminUser = userToDeactivate.role === UserRole.ADMIN;
+    const deactivatingAdminUser = userToDeactivate.createdBy === null;
     // If deactivating an admin user, deactivate all their members as well
     if (deactivatingAdminUser) {
       await this.databaseService.updateMany<User>(

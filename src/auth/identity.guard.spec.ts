@@ -3,7 +3,6 @@ import { IdentityGuard } from './identity.guard';
 import { verify, sign } from 'jsonwebtoken';
 import { createMock } from '@golevelup/ts-jest';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/types/user-role';
 import { ObjectId } from 'mongodb';
 
 describe('IdentityGuard', () => {
@@ -25,7 +24,6 @@ describe('IdentityGuard', () => {
       email: '',
       firstName: '',
       lastName: '',
-      role: UserRole.ADMIN,
       createdBy: null,
       verified: false,
       verifyId: '',

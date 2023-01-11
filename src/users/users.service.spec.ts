@@ -4,7 +4,6 @@ import { ObjectId } from 'mongodb';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
 import { DatabaseServiceMock } from '../database/database.service.mock';
-import { UserRole } from './types/user-role';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -64,7 +63,6 @@ describe('UsersService', () => {
         email,
         firstName,
         lastName,
-        role: UserRole.ADMIN,
         createdBy: null,
         verified: false,
         verifyId: 'some-verify-id',
@@ -103,7 +101,6 @@ describe('UsersService', () => {
         email,
         firstName,
         lastName,
-        role: UserRole.MEMBER,
         createdBy: adminId,
         verified: false,
         verifyId: 'some-verify-id',
@@ -189,13 +186,14 @@ describe('UsersService', () => {
   });
 
   describe('method: deactivate', () => {
-    let userMock: { _id: ObjectId; active: boolean; role?: UserRole };
+    let userMock: { _id: ObjectId; active: boolean; createdBy: null };
 
     describe('context: user is active', () => {
       beforeEach(() => {
         userMock = {
           _id: new ObjectId(),
           active: true,
+          createdBy: null,
         };
         jest
           .spyOn(databaseServiceMock, 'findOne')
@@ -228,7 +226,6 @@ describe('UsersService', () => {
         // Arrange
         userMock = {
           ...userMock,
-          role: UserRole.ADMIN,
         };
         const updateMany = jest.spyOn(databaseService, 'updateMany');
         // Act
@@ -247,6 +244,7 @@ describe('UsersService', () => {
         userMock = {
           _id: new ObjectId(),
           active: false,
+          createdBy: null,
         };
         jest
           .spyOn(databaseServiceMock, 'findOne')
