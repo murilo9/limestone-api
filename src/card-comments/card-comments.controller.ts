@@ -16,13 +16,14 @@ import { User } from '../users/entities/user.entity';
 import { CardCommentsService } from './card-comments.service';
 import { CreateCardCommentDto } from './dto/create-card-comment.dto';
 import { UpdateCardCommentDto } from './dto/update-card-comment.dto';
-import { CardGuard } from './guards/card-comment.guard';
+import { CardCommentGuard } from './guards/card-comment.guard';
+import { CardExistsGuard } from './guards/card-exists.guard';
 
 @Controller('boards')
 export class CardCommentsController {
   constructor(private readonly cardCommentsService: CardCommentsService) {}
 
-  @UseGuards(IdentityGuard, BoardGuard, CardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard)
   @Post('/:boardId/cards/:cardId/comments')
   create(
     @Body(new ValidationPipe()) createCardCommentDto: CreateCardCommentDto,
@@ -36,13 +37,13 @@ export class CardCommentsController {
     );
   }
 
-  @UseGuards(IdentityGuard, BoardGuard, BoardGuard, CardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, BoardGuard, CardExistsGuard)
   @Get('/:boardId/cards/:cardId/comments')
   findByCard(@Param('cardId') cardId: string) {
     return this.cardCommentsService.getByCard(cardId);
   }
 
-  @UseGuards(IdentityGuard, BoardGuard, CardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CardCommentGuard)
   @Put('/:boardId/cards/:cardId/comments/:cardCommentId')
   update(
     @Body(new ValidationPipe()) updateCardCommentDto: UpdateCardCommentDto,
@@ -51,7 +52,7 @@ export class CardCommentsController {
     return this.cardCommentsService.update(updateCardCommentDto, cardCommentId);
   }
 
-  @UseGuards(IdentityGuard, BoardGuard, CardGuard)
+  @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CardCommentGuard)
   @Delete('/:boardId/cards/:cardId/comments/:cardCommentId')
   delete(@Param('cardCommentId') cardCommentId: string) {
     return this.cardCommentsService.delete(cardCommentId);

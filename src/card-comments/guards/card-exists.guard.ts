@@ -13,10 +13,9 @@ import { User } from '../../users/entities/user.entity';
 
 /**
  * Blocks if:
- * - Comment does not exist
- * - User is neither author or admin
+ * - Card does not exist
  */
-export class CardCommentGuard implements CanActivate {
+export class CardExistsGuard implements CanActivate {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
   ) {}
@@ -29,21 +28,14 @@ export class CardCommentGuard implements CanActivate {
         cardCommentId: string;
       };
     }>();
-    const { params, user } = request;
-    const { cardCommentId } = params;
-    // Verifies if card comment exists
-    const cardComment = await this.databaseService.findOne<CardComment>(
-      'cardComments',
-      { _id: new ObjectId(cardCommentId) },
-    );
-    if (!cardComment) {
-      throw new NotFoundException('Comment not found');
-    }
-    // Verifies if user is author or admin
-    const userIsAuthor = cardComment.author.toString() === user._id.toString();
-    const userIsAdmin = user.createdBy === null;
-    if (!userIsAuthor && !userIsAdmin) {
-      throw new UnauthorizedException('You lack permission to do that');
+    const { params } = request;
+    const { cardId } = params;
+    // Verifies if card exists
+    const card = await this.databaseService.findOne<Card>('cards', {
+      _id: new ObjectId(cardId),
+    });
+    if (!card) {
+      throw new NotFoundException('Card not found');
     }
     return true;
   }
