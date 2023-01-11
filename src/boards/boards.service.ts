@@ -28,6 +28,10 @@ export class BoardsService {
         _id: new ObjectId(),
       })),
       archived: false,
+      settings: {
+        canCommentOnCards: [],
+        canCreateCards: [],
+      },
     };
     const createdBoard = await this.databaseService.insertOne(
       'boards',

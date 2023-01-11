@@ -56,6 +56,10 @@ describe('BoardsService', () => {
         _id: insertId,
         created: createDate,
         updated: updateDate,
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       // Act
       const result = await boardsService.create(createBoardDto, adminUser);
@@ -77,6 +81,10 @@ describe('BoardsService', () => {
         owner: adminUser._id,
         columns: [] as BoardColumn[],
         archived: false,
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       // Act
       const insertOne = jest.spyOn(databaseService, 'insertOne');
@@ -141,6 +149,10 @@ describe('BoardsService', () => {
           { _id: insertId.toString(), title: 'In progress' },
           { _id: insertId.toString(), title: 'Done' },
         ],
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       const updatedBoard: Board = {
         _id: boardId,
@@ -156,6 +168,10 @@ describe('BoardsService', () => {
           { _id: insertId, title: 'In progress', cardCount: 0 },
           { _id: insertId, title: 'Done', cardCount: 0 },
         ],
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       jest.spyOn(databaseService, 'findOne').mockImplementation(async () => ({
         _id: insertId,
@@ -169,6 +185,7 @@ describe('BoardsService', () => {
         boardId.toString(),
         updateBoardDto,
       );
+      console.log('result', result);
       // Assert
       expect(result).toStrictEqual(updatedBoard);
     });
@@ -186,6 +203,10 @@ describe('BoardsService', () => {
           { _id: insertId.toString(), title: 'In progress' },
           { _id: insertId.toString(), title: 'Done' },
         ],
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       const boardUpdatePayload = {
         title: 'Board',
@@ -197,6 +218,10 @@ describe('BoardsService', () => {
           { _id: insertId, title: 'In progress', cardCount: 0 },
           { _id: insertId, title: 'Done', cardCount: 0 },
         ],
+        settings: {
+          canCommentOnCards: [],
+          canCreateCards: [],
+        },
       };
       const searchFilter = {
         _id: boardId,

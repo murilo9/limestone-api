@@ -18,12 +18,13 @@ import { CreateCardCommentDto } from './dto/create-card-comment.dto';
 import { UpdateCardCommentDto } from './dto/update-card-comment.dto';
 import { CardCommentGuard } from './guards/card-comment.guard';
 import { CardExistsGuard } from './guards/card-exists.guard';
+import { CreateCardCommentGuard } from './guards/create-card-comment.guard';
 
 @Controller('boards')
 export class CardCommentsController {
   constructor(private readonly cardCommentsService: CardCommentsService) {}
 
-  @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard)
+  @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CreateCardCommentGuard)
   @Post('/:boardId/cards/:cardId/comments')
   create(
     @Body(new ValidationPipe()) createCardCommentDto: CreateCardCommentDto,

@@ -15,13 +15,14 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { BoardGuard } from './guards/board.guard';
 import { ColumnGuard } from './guards/column.guard';
+import { CreateCardGuard } from './guards/create-card.guard';
 import { UpdateCardGuard } from './guards/update-card.guard';
 
 @Controller('boards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
-  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
+  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, CreateCardGuard)
   @Post(':boardId/columns/:columnId/cards')
   create(
     @Body(new ValidationPipe()) createCardDto: CreateCardDto,

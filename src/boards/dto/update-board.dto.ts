@@ -9,6 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { BoardColumn } from '../entities/board-column.entity';
+import { BoardSettings } from '../types/BoardSettings';
 
 class ColumnDto {
   @IsString()
@@ -34,4 +35,6 @@ export class UpdateBoardDto {
   @ValidateNested()
   @Type(() => ColumnDto)
   columns: ColumnDto[];
+  @ValidateNested()
+  settings: BoardSettings;
 }
