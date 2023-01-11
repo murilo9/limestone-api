@@ -5,6 +5,7 @@ import { CardComment } from '../../boards/entities/card-comment.entity';
 export interface Card extends PersistentEntity {
   columnId: ObjectId;
   title: string;
+  description: string;
   assignee: ObjectId | null;
   priority: number;
 }

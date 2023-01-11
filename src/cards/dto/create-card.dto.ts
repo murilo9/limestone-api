@@ -5,6 +5,9 @@ export class CreateCardDto {
   @IsString()
   @IsNotEmpty()
   title: string;
+  @IsString()
+  @IsOptional()
+  description: string;
   @IsOptional()
   @IsString()
   assignee: string;
