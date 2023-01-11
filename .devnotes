@@ -1,7 +1,4 @@
-There are 2 kinds of roles:
-
-- Admin - Can't be deleted.
-- User - Can be deleted.
+Te admin user has createdBy = null, and can't be deactivated
 
 Most resources have a foreign key to their respective admin, in order to manage its access permissions.
 
