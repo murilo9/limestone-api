@@ -29,8 +29,12 @@ export class BoardsService {
       })),
       archived: false,
       settings: {
-        canCommentOnCards: [],
-        canCreateCards: [],
+        canCommentOnCards: createBoardDto.settings.canCommentOnCards.map(
+          (userId) => new ObjectId(userId),
+        ),
+        canCreateCards: createBoardDto.settings.canCreateCards.map(
+          (userId) => new ObjectId(userId),
+        ),
       },
     };
     const createdBoard = await this.databaseService.insertOne(

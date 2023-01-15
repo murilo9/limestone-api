@@ -6,6 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { BoardColumn } from '../entities/board-column.entity';
+import { BoardSettingsDto } from '../types/BoardSettingsDto';
 
 export class CreateBoardDto {
   @IsString()
@@ -17,4 +18,6 @@ export class CreateBoardDto {
   @IsArray()
   @IsString({ each: true })
   columns: string[];
+  @ValidateNested()
+  settings: BoardSettingsDto;
 }
