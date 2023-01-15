@@ -33,6 +33,14 @@ export class UsersController {
     return this.usersService.create(signUpDto);
   }
 
+  @UseGuards(IdentityGuard)
+  @Get('/me')
+  fetchMe(@Req() request: { user: User }) {
+    const { user } = request;
+    console.log('user', user);
+    return user;
+  }
+
   @Post('/verify/:id')
   verify(@Param('id') id: string) {
     return this.usersService.verify(id);
