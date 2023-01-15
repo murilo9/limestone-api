@@ -70,6 +70,14 @@ export class BoardsService {
     boardToUpdate.users = updateBoardDto.users.map(
       (user) => new ObjectId(user),
     );
+    boardToUpdate.settings.canCommentOnCards =
+      updateBoardDto.settings.canCommentOnCards.map(
+        (userId) => new ObjectId(userId),
+      );
+    boardToUpdate.settings.canCreateCards =
+      updateBoardDto.settings.canCreateCards.map(
+        (userId) => new ObjectId(userId),
+      );
     // If updating board columns
     if (boardToUpdate.columns) {
       for (let i = 0; i < boardToUpdate.columns.length; i++) {
