@@ -15,9 +15,10 @@ export class CardsService {
   ) {}
 
   async create(createCardDto: CreateCardDto, columnId: string) {
-    const { title, assignee, priority } = createCardDto;
+    const { title, assignee, priority, description } = createCardDto;
     const newCard: Omit<Card, '_id' | 'created' | 'updated'> = {
       title,
+      description,
       assignee: new ObjectId(assignee),
       priority,
       columnId: new ObjectId(columnId),
