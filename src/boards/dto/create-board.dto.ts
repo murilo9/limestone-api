@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsNotEmpty,
@@ -18,6 +19,7 @@ export class CreateBoardDto {
   @IsArray()
   @IsString({ each: true })
   columns: string[];
-  @ValidateNested()
+  @ValidateNested({ each: true })
+  @Type(() => BoardSettingsDto)
   settings: BoardSettingsDto;
 }
