@@ -83,7 +83,6 @@ export class DatabaseService {
         returnDocument: 'after',
       },
     );
-    console.log(query.value);
     return query.value;
   }
 

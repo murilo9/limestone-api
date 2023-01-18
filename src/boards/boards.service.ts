@@ -57,7 +57,6 @@ export class BoardsService {
     );
     // Populate cards amount for each board column
     for (const board of boards) {
-      console.log(board);
       for (const column of board.columns) {
         const cards = await this.databaseService.findMany<Card>('cards', {
           columnId: column._id,

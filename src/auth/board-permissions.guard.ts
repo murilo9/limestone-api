@@ -20,7 +20,6 @@ export class BoardPermissionsGuard implements CanActivate {
     }>();
     const { user } = request;
     const { boardId } = request.params;
-    console.log(user, boardId);
     return true;
   }
 }
