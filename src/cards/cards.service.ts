@@ -61,7 +61,6 @@ export class CardsService {
     const cards = await this.databaseService.findMany('cards', {
       columnId: columnId,
     });
-    console.log(cards, columnId);
     return cards;
   }
 
