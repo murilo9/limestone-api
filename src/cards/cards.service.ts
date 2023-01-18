@@ -21,7 +21,7 @@ export class CardsService {
       description,
       assignee: new ObjectId(assignee),
       priority,
-      columnId: new ObjectId(columnId),
+      columnId: new ObjectId(columnId).toString(),
     };
     const createdCard = await this.databaseService.insertOne('cards', newCard);
     return createdCard;
@@ -39,7 +39,7 @@ export class CardsService {
       cardToUpdate.assignee = new ObjectId(updateCardDto.assignee);
     }
     if (updateCardDto.columnId) {
-      cardToUpdate.columnId = new ObjectId(updateCardDto.columnId);
+      cardToUpdate.columnId = new ObjectId(updateCardDto.columnId).toString();
     }
     // Update in database
     const updateResult = await this.databaseService.updateOne(

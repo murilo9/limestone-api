@@ -1,8 +1,8 @@
 import PersistentEntity from '../../common/types/persistent-entity';
 import { Card } from '../../cards/entities/card.entity';
 
-export interface BoardColumn
-  extends Omit<PersistentEntity, 'created' | 'updated'> {
+export interface BoardColumn {
+  _id: string;
   title: string;
   cardCount: number;
 }

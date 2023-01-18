@@ -25,7 +25,7 @@ export class BoardsService {
       columns: columns.map((columnTitle) => ({
         title: columnTitle,
         cardCount: 0,
-        _id: new ObjectId(),
+        _id: new ObjectId().toString(),
       })),
       archived: false,
       settings: {
@@ -51,14 +51,34 @@ export class BoardsService {
     if (!includeArchived) {
       searchFilter.archived = false;
     }
-    const boards = await this.databaseService.findMany('boards', searchFilter);
+    const boards = await this.databaseService.findMany<Board>(
+      'boards',
+      searchFilter,
+    );
+    // Populate cards amount for each board column
+    for (const board of boards) {
+      console.log(board);
+      for (const column of board.columns) {
+        const cards = await this.databaseService.findMany<Card>('cards', {
+          columnId: column._id,
+        });
+        column.cardCount = cards.length;
+      }
+    }
     return boards;
   }
 
   async findOne(id: string) {
-    const board = await this.databaseService.findOne('boards', {
+    const board = await this.databaseService.findOne<Board>('boards', {
       _id: new ObjectId(id),
     });
+    // Populate cards amount for board columns
+    for (const column of board.columns) {
+      const cardsAmount = await this.databaseService.findMany<Card>('cards', {
+        columnId: column._id,
+      });
+      column.cardCount = cardsAmount.length;
+    }
     return board;
   }
 
@@ -84,10 +104,7 @@ export class BoardsService {
       );
     // If updating board columns
     if (boardToUpdate.columns) {
-      for (let i = 0; i < boardToUpdate.columns.length; i++) {
-        const column = boardToUpdate.columns[i];
-        // Fill column ObjectId
-        column._id = new ObjectId(column._id);
+      for (const column of boardToUpdate.columns) {
         // Update cardsCount
         const cardCount = await this.databaseService.findMany<Card>('cards', {
           columnId: column._id,
