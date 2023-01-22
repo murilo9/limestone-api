@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { CardComment } from '../../boards/entities/card-comment.entity';
 import { Card } from '../../cards/entities/card.entity';
 import { DatabaseService } from '../../database/database.service';
 import { User } from '../../users/entities/user.entity';
