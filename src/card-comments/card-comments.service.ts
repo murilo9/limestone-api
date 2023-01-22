@@ -63,4 +63,9 @@ export class CardCommentsService {
     });
     return 'Comment deleted successfully';
   }
+
+  async getCommentsCount(cardId: string) {
+    const cardComments = await this.getByCard(cardId);
+    return cardComments.length;
+  }
 }

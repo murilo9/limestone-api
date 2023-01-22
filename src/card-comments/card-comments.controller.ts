@@ -44,6 +44,12 @@ export class CardCommentsController {
     return this.cardCommentsService.getByCard(cardId);
   }
 
+  @UseGuards(IdentityGuard, BoardGuard, BoardGuard, CardExistsGuard)
+  @Get('/:boardId/cards/:cardId/comments-count')
+  getCommentsCount(@Param('cardId') cardId: string) {
+    return this.cardCommentsService.getCommentsCount(cardId);
+  }
+
   @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CardCommentGuard)
   @Put('/:boardId/cards/:cardId/comments/:cardCommentId')
   update(
