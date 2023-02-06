@@ -7,8 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { BoardColumn } from '../../boards/entities/board-column.entity';
-import { Board } from '../../boards/entities/board.entity';
+import { Column } from '../../columns/entities/column.entity';
 import { DatabaseService } from '../../database/database.service';
 import { User } from '../../users/entities/user.entity';
 
@@ -30,14 +29,11 @@ export class ColumnGuard implements CanActivate {
       };
     }>();
     const { params } = request;
-    const { boardId, columnId } = params;
-    const board = await this.databaseService.findOne<Board>('boards', {
-      _id: new ObjectId(boardId),
-    });
+    const { columnId } = params;
     // Verifies if column exist
-    const column = board.columns.find(
-      (column) => column._id.toString() === columnId,
-    );
+    const column = await this.databaseService.findOne<Column>('columns', {
+      _id: new ObjectId(columnId),
+    });
     if (!column) {
       throw new NotFoundException('Column not found');
     }

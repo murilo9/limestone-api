@@ -9,7 +9,7 @@ import { User } from '../users/entities/user.entity';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { BoardColumn } from './entities/board-column.entity';
+import { BoardColumn } from '../columns/entities/column.entity';
 import { Board } from './entities/board.entity';
 
 describe('BoardsService', () => {

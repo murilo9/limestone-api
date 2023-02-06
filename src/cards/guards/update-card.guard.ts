@@ -7,8 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { BoardColumn } from '../../boards/entities/board-column.entity';
-import { Board } from '../../boards/entities/board.entity';
+import { Column } from '../../columns/entities/column.entity';
 import { DatabaseService } from '../../database/database.service';
 import { User } from '../../users/entities/user.entity';
 import { UpdateCardDto } from '../dto/update-card.dto';
@@ -67,13 +66,10 @@ export class UpdateCardGuard implements CanActivate {
     // Verifies if card column exist
     let cardColumnExists = true;
     if (body.columnId) {
-      const board = await this.databaseService.findOne<Board>('boards', {
-        _id: new ObjectId(boardId),
+      const column = await this.databaseService.findOne<Column>('columns', {
+        _id: new ObjectId(body.columnId),
       });
-      const cardColumn = board.columns.find(
-        (column) => column._id.toString() === columnId,
-      );
-      cardColumnExists = !!cardColumn;
+      cardColumnExists = !!column;
     }
     if (!cardColumnExists) {
       throw new BadRequestException('Column not found');

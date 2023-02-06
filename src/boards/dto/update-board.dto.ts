@@ -8,14 +8,6 @@ import {
 } from 'class-validator';
 import { BoardSettingsDto } from '../types/BoardSettingsDto';
 
-class ColumnDto {
-  @IsString()
-  @IsNotEmpty()
-  _id: string;
-  @IsString()
-  @IsNotEmpty()
-  title: string;
-}
 export class UpdateBoardDto {
   @IsString()
   @IsNotEmpty()
@@ -28,10 +20,6 @@ export class UpdateBoardDto {
   users: string[];
   @IsBoolean()
   archived: boolean;
-  @IsArray()
-  @ValidateNested()
-  @Type(() => ColumnDto)
-  columns: ColumnDto[];
   @ValidateNested()
   settings: BoardSettingsDto;
 }

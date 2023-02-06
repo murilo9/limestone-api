@@ -6,7 +6,6 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { BoardColumn } from '../entities/board-column.entity';
 import { BoardSettingsDto } from '../types/BoardSettingsDto';
 
 export class CreateBoardDto {

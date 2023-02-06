@@ -18,12 +18,12 @@ import { ColumnGuard } from './guards/column.guard';
 import { CreateCardGuard } from './guards/create-card.guard';
 import { UpdateCardGuard } from './guards/update-card.guard';
 
-@Controller('boards')
+@Controller()
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
-  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, CreateCardGuard)
-  @Post(':boardId/columns/:columnId/cards')
+  @UseGuards(IdentityGuard, BoardGuard, CreateCardGuard)
+  @Post('boards/:boardId/columns/:columnId/cards')
   create(
     @Body(new ValidationPipe()) createCardDto: CreateCardDto,
     @Param('columnId') columnId: string,
@@ -32,19 +32,13 @@ export class CardsController {
   }
 
   @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
-  @Get(':boardId/columns/:columnId/cards')
+  @Get('boards/:boardId/columns/:columnId/cards')
   findByColumn(@Param('columnId') columnId: string) {
     return this.cardsService.getByColumn(columnId);
   }
 
-  @UseGuards(IdentityGuard, BoardGuard, ColumnGuard)
-  @Get(':boardId/columns/:columnId/cards/:cardId')
-  findById(@Param('cardId') cardId: string) {
-    return this.cardsService.get(cardId);
-  }
-
   @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, UpdateCardGuard)
-  @Put(':boardId/columns/:columnId/cards/:cardId')
+  @Put('boards/:boardId/columns/:columnId/cards/:cardId')
   update(
     @Param('cardId') cardId: string,
     @Body(new ValidationPipe()) updateCardDto: UpdateCardDto,
@@ -53,7 +47,7 @@ export class CardsController {
   }
 
   @UseGuards(IdentityGuard, BoardGuard, ColumnGuard, UpdateCardGuard)
-  @Delete(':boardId/columns/:columnId/cards/:cardId')
+  @Delete('boards/:boardId/columns/:columnId/cards/:cardId')
   delete(@Param('cardId') cardId: string) {
     return this.cardsService.delete(cardId);
   }

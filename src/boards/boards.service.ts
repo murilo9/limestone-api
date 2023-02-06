@@ -22,11 +22,6 @@ export class BoardsService {
       admin: new ObjectId(creator.createdBy || creator._id),
       users: users.map((user) => new ObjectId(user)),
       owner: new ObjectId(creator._id),
-      columns: columns.map((columnTitle) => ({
-        title: columnTitle,
-        cardCount: 0,
-        _id: new ObjectId().toString(),
-      })),
       archived: false,
       settings: {
         canCommentOnCards: createBoardDto.settings.canCommentOnCards.map(
@@ -55,15 +50,6 @@ export class BoardsService {
       'boards',
       searchFilter,
     );
-    // Populate cards amount for each board column
-    for (const board of boards) {
-      for (const column of board.columns) {
-        const cards = await this.databaseService.findMany<Card>('cards', {
-          columnId: column._id,
-        });
-        column.cardCount = cards.length;
-      }
-    }
     return boards;
   }
 
@@ -71,13 +57,6 @@ export class BoardsService {
     const board = await this.databaseService.findOne<Board>('boards', {
       _id: new ObjectId(id),
     });
-    // Populate cards amount for board columns
-    for (const column of board.columns) {
-      const cardsAmount = await this.databaseService.findMany<Card>('cards', {
-        columnId: column._id,
-      });
-      column.cardCount = cardsAmount.length;
-    }
     return board;
   }
 
@@ -101,16 +80,6 @@ export class BoardsService {
       updateBoardDto.settings.canCreateCards.map(
         (userId) => new ObjectId(userId),
       );
-    // If updating board columns
-    if (boardToUpdate.columns) {
-      for (const column of boardToUpdate.columns) {
-        // Update cardsCount
-        const cardCount = await this.databaseService.findMany<Card>('cards', {
-          columnId: column._id,
-        });
-        column.cardCount = cardCount.length;
-      }
-    }
     // Save in database
     const updateResult = await this.databaseService.updateOne(
       'boards',
