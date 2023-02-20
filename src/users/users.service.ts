@@ -87,7 +87,10 @@ export class UsersService {
     const adminUsers = await this.databaseService.findMany('users', {
       createdBy: new ObjectId(adminId),
     });
-    return adminUsers;
+    const adminUser = await this.databaseService.findOne('users', {
+      _id: new ObjectId(adminId),
+    });
+    return [...adminUsers, adminUser];
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
