@@ -30,8 +30,8 @@ export class ColumnsController {
 
   @UseGuards(IdentityGuard, BoardGuard)
   @Get('boards/:boardId/columns')
-  findByBoard(@Param('columnId') columnId: string) {
-    return this.columnsService.getByBoard(columnId);
+  findByBoard(@Param('boardId') boardId: string) {
+    return this.columnsService.getByBoard(boardId);
   }
 
   @UseGuards(IdentityGuard, BoardGuard)
