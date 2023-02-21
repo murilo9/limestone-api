@@ -6,22 +6,24 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
-export class ValidationPipe implements PipeTransform<any> {
-  async transform(value: any, { metatype }: ArgumentMetadata) {
-    if (!metatype || !this.toValidate(metatype)) {
-      return value;
-    }
-    const object = plainToInstance(metatype, value);
-    const errors = await validate(object, {
-      whitelist: true,
+export class ValidationPipe implements PipeTransform {
+  constructor(private dtoClass: any) {}
+
+  async transform(value: any): Promise<any> {
+    const transformed = plainToInstance(this.dtoClass, value, {
+      excludeExtraneousValues: true,
     });
-    if (errors.length > 0) {
-      throw new BadRequestException('Validation failed');
+    console.log(this.dtoClass, transformed, value);
+    const errors = await validate(transformed);
+
+    if (errors.length) {
+      throw new BadRequestException(errors);
     }
-    return value;
+
+    return transformed;
   }
 
   private toValidate(metatype: Function): boolean {

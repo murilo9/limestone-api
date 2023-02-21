@@ -33,6 +33,9 @@ export class DeleteBoardGuard implements CanActivate {
     const boardToUpdate = await this.databaseService.findOne<Board>('boards', {
       _id: new ObjectId(boardId),
     });
+    if (!boardToUpdate) {
+      throw new NotFoundException('Board not found');
+    }
     if (!boardToUpdate.archived) {
       throw new BadRequestException('Board is not archived');
     }

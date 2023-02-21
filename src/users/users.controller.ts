@@ -29,7 +29,7 @@ export class UsersController {
 
   @UseGuards(CreateUserGuard)
   @Post('/signup')
-  signUp(@Body(new ValidationPipe()) signUpDto: SignUpDto) {
+  signUp(@Body(new ValidationPipe(SignUpDto)) signUpDto: SignUpDto) {
     return this.usersService.create(signUpDto);
   }
 
@@ -56,7 +56,7 @@ export class UsersController {
   @UseGuards(IdentityGuard, CreateUserGuard, CreateMemberUserGuard)
   @Post('/users')
   createMember(
-    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+    @Body(new ValidationPipe(CreateUserDto)) createUserDto: CreateUserDto,
     @Req() request: { adminId?: ObjectId },
   ) {
     return this.usersService.create(createUserDto, request.adminId);
@@ -66,7 +66,7 @@ export class UsersController {
   @Put('/users/:id')
   update(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+    @Body(new ValidationPipe(UpdateUserDto)) updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
   }

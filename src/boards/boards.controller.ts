@@ -27,7 +27,7 @@ export class BoardsController {
   @UseGuards(IdentityGuard)
   @Post()
   create(
-    @Body(new ValidationPipe()) createBoardDto: CreateBoardDto,
+    @Body(new ValidationPipe(CreateBoardDto)) createBoardDto: CreateBoardDto,
     @Req() request: { user: User },
   ) {
     const { user } = request;
@@ -58,7 +58,7 @@ export class BoardsController {
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateBoardDto: UpdateBoardDto,
+    @Body(new ValidationPipe(UpdateBoardDto)) updateBoardDto: UpdateBoardDto,
   ) {
     return this.boardsService.update(id, updateBoardDto);
   }

@@ -27,7 +27,8 @@ export class CardCommentsController {
   @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CreateCardCommentGuard)
   @Post('/:boardId/cards/:cardId/comments')
   create(
-    @Body(new ValidationPipe()) createCardCommentDto: CreateCardCommentDto,
+    @Body(new ValidationPipe(CreateCardCommentDto))
+    createCardCommentDto: CreateCardCommentDto,
     @Param('cardId') cardId: string,
     @Req() request: { user: User },
   ) {
@@ -53,7 +54,8 @@ export class CardCommentsController {
   @UseGuards(IdentityGuard, BoardGuard, CardExistsGuard, CardCommentGuard)
   @Put('/:boardId/cards/:cardId/comments/:cardCommentId')
   update(
-    @Body(new ValidationPipe()) updateCardCommentDto: UpdateCardCommentDto,
+    @Body(new ValidationPipe(UpdateCardCommentDto))
+    updateCardCommentDto: UpdateCardCommentDto,
     @Param('cardCommentId') cardCommentId: string,
   ) {
     return this.cardCommentsService.update(updateCardCommentDto, cardCommentId);
