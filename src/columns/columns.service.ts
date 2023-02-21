@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
-import { Board } from '../boards/entities/board.entity';
+import { CardsService } from '../cards/cards.service';
+import { Card } from '../cards/entities/card.entity';
 import { DatabaseService } from '../database/database.service';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
@@ -11,7 +11,7 @@ import { Column } from './entities/column.entity';
 export class ColumnsService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
-    private configService: ConfigService,
+    @Inject(CardsService) private cardsService: CardsService,
   ) {}
 
   async create(createColumnDto: CreateColumnDto, boardId: string) {
@@ -62,9 +62,16 @@ export class ColumnsService {
   }
 
   async delete(columnId: string) {
+    const columnCards = await this.databaseService.findMany<Card>('cards', {
+      columnId: new ObjectId(columnId),
+    });
     await this.databaseService.deleteOne('columns', {
       _id: new ObjectId(columnId),
     });
+    for (const card of columnCards) {
+      const cardId = card._id.toString();
+      await this.cardsService.delete(cardId);
+    }
     return `Column deleted successfully`;
   }
 }

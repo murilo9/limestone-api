@@ -15,13 +15,14 @@ export class CardsService {
   ) {}
 
   async create(createCardDto: CreateCardDto, columnId: string) {
-    const { title, assignee, priority, description } = createCardDto;
+    const { title, assignee, priority, description, index } = createCardDto;
     const newCard: Omit<Card, '_id' | 'created' | 'updated'> = {
       title,
+      index,
       description,
       assignee: new ObjectId(assignee),
       priority,
-      columnId: new ObjectId(columnId).toString(),
+      columnId: new ObjectId(columnId),
     };
     const createdCard = await this.databaseService.insertOne('cards', newCard);
     return createdCard;
@@ -39,7 +40,7 @@ export class CardsService {
       cardToUpdate.assignee = new ObjectId(updateCardDto.assignee);
     }
     if (updateCardDto.columnId) {
-      cardToUpdate.columnId = new ObjectId(updateCardDto.columnId).toString();
+      cardToUpdate.columnId = new ObjectId(updateCardDto.columnId);
     }
     // Update in database
     const updateResult = await this.databaseService.updateOne(
@@ -78,6 +79,9 @@ export class CardsService {
   async delete(cardId: string) {
     await this.databaseService.deleteOne('cards', {
       _id: new ObjectId(cardId),
+    });
+    await this.databaseService.deleteMany('cardComments', {
+      cardId: new ObjectId(cardId),
     });
     return `Card deleted successfully`;
   }

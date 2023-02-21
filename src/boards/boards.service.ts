@@ -2,6 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { Card } from '../cards/entities/card.entity';
+import { ColumnsService } from '../columns/columns.service';
+import { Column } from '../columns/entities/column.entity';
 import { DatabaseService } from '../database/database.service';
 import { User } from '../users/entities/user.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -12,7 +14,7 @@ import { Board } from './entities/board.entity';
 export class BoardsService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
-    private configService: ConfigService,
+    @Inject(ColumnsService) private columnsService: ColumnsService,
   ) {}
 
   async create(createBoardDto: CreateBoardDto, creator: User) {
@@ -91,8 +93,20 @@ export class BoardsService {
     return updateResult;
   }
 
-  async delete(id: string) {
-    await this.databaseService.deleteOne('boards', { _id: new ObjectId(id) });
+  async delete(boardId: string) {
+    const boardColumns = await this.databaseService.findMany<Column>(
+      'columns',
+      {
+        boardId: new ObjectId(boardId),
+      },
+    );
+    await this.databaseService.deleteOne('boards', {
+      _id: new ObjectId(boardId),
+    });
+    for (const column of boardColumns) {
+      const columnId = column._id.toString();
+      await this.columnsService.delete(columnId);
+    }
     return 'Board deleted successfully';
   }
 }
