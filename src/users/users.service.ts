@@ -72,7 +72,7 @@ export class UsersService {
 
     // TODO: send verification email
 
-    return 'Account created successfully.';
+    return createdUser;
   }
 
   async verify(verifyId: string) {
