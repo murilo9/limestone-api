@@ -1,6 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import {
   IsArray,
+  IsDefined,
   IsNotEmpty,
   IsString,
   IsUUID,
@@ -22,7 +23,7 @@ export class CreateBoardDto {
   @IsString({ each: true })
   columns: string[];
   @Expose()
-  @ValidateNested({ each: true })
-  @Type(() => BoardSettingsDto)
+  @IsDefined()
+  @ValidateNested()
   settings: BoardSettingsDto;
 }
