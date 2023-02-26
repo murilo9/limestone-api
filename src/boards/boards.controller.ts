@@ -63,7 +63,7 @@ export class BoardsController {
     return this.boardsService.update(id, updateBoardDto);
   }
 
-  @UseGuards(IdentityGuard, UpdateBoardGuard, DeleteBoardGuard)
+  @UseGuards(IdentityGuard, DeleteBoardGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.boardsService.delete(id);
