@@ -9,6 +9,7 @@ export class AuthService {
   async signIn(user: User) {
     return {
       access_token: jwt.sign(user, this.secret),
+      user,
     };
   }
 }
