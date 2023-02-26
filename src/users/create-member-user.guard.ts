@@ -7,7 +7,7 @@ import {
 import { ObjectId } from 'mongodb';
 import { Observable } from 'rxjs';
 import { DatabaseService } from '../database/database.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { User } from './entities/user.entity';
 
@@ -21,7 +21,7 @@ export class CreateMemberUserGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<{
-      body: CreateUserDto;
+      body: CreateUserOnSignUpDto;
       user: User;
       adminId?: ObjectId;
     }>();

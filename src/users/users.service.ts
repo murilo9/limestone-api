@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -9,6 +9,7 @@ import bcrypt = require('bcrypt');
 import { UserPassword } from './entities/user-password.entity';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
+import { CreateUserDto } from './dto/create-user.dto';
 
 export class UsersService {
   constructor(
@@ -22,9 +23,15 @@ export class UsersService {
    * @param adminId If present, creates a member user instead of an admin user
    * @returns
    */
-  async create(signUpDto: CreateUserDto, adminId?: ObjectId) {
+  async create(
+    createUserDto: CreateUserOnSignUpDto | CreateUserDto,
+    adminId?: ObjectId,
+  ) {
     const NODE_ENV = this.configService.get('NODE_ENV');
-    const { email, firstName, lastName, password } = signUpDto;
+    const { email, firstName, lastName } = createUserDto;
+    let password = (createUserDto as CreateUserOnSignUpDto).password;
+    // TODO: define a random temporary password, that'll be sent to the user by e-mail
+    password = password || 'random-temporary-password';
     const newUser: Omit<User, '_id' | 'created' | 'updated'> = {
       email,
       firstName,

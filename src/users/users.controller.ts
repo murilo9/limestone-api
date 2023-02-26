@@ -10,7 +10,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -22,6 +22,7 @@ import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { Request } from 'express';
 import { User } from './entities/user.entity';
 import { ObjectId } from 'mongodb';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller()
 export class UsersController {
@@ -56,7 +57,8 @@ export class UsersController {
   @UseGuards(IdentityGuard, CreateUserGuard, CreateMemberUserGuard)
   @Post('/users')
   createMember(
-    @Body(new ValidationPipe(CreateUserDto)) createUserDto: CreateUserDto,
+    @Body(new ValidationPipe(CreateUserDto))
+    createUserDto: CreateUserDto,
     @Req() request: { adminId?: ObjectId },
   ) {
     return this.usersService.create(createUserDto, request.adminId);

@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsDefined, IsEmail, IsString, IsUUID } from 'class-validator';
-export class CreateUserDto {
+export class CreateUserOnSignUpDto {
   @Expose()
   @IsString()
   firstName: string;
@@ -10,4 +10,7 @@ export class CreateUserDto {
   @Expose()
   @IsEmail()
   email: string;
+  @Expose()
+  @IsString()
+  password: string;
 }
