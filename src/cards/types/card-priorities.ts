@@ -1,1 +1,1 @@
-export const CardPriorities = [1, 2, 3, 4];
+export const CardPriorities = [0, 1, 2, 3];
