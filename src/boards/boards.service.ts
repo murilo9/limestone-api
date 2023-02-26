@@ -38,6 +38,12 @@ export class BoardsService {
       'boards',
       newBoard,
     );
+    for (const [index, column] of columns.entries()) {
+      await this.columnsService.create(
+        { title: column, index },
+        createdBoard._id,
+      );
+    }
     return createdBoard;
   }
 
