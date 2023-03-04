@@ -60,7 +60,7 @@ export class CardsService {
 
   async getByColumn(columnId: string) {
     const cards = await this.databaseService.findMany('cards', {
-      columnId: columnId,
+      columnId: new ObjectId(columnId),
     });
     return cards;
   }
