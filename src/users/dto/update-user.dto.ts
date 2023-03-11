@@ -10,6 +10,9 @@ export class UpdateUserDto {
   @IsString()
   lastName: string;
   @Expose()
+  @IsString()
+  title: string;
+  @Expose()
   @ValidateNested()
   notificationOptions: UserNotificationOptions;
 }

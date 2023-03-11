@@ -6,6 +6,7 @@ export const memberUser: User = {
   email: '',
   firstName: '',
   lastName: '',
+  title: '',
   createdBy: adminUser._id,
   verified: false,
   verifyId: '',

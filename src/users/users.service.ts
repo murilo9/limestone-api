@@ -10,6 +10,7 @@ import { UserPassword } from './entities/user-password.entity';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { CreateUserDto } from './dto/create-user.dto';
+import { BoardsService } from '../boards/boards.service';
 
 export class UsersService {
   constructor(
@@ -36,6 +37,7 @@ export class UsersService {
       email,
       firstName,
       lastName,
+      title: '',
       createdBy: adminId ? new ObjectId(adminId) : null,
       verified: false,
       verifyId: NODE_ENV === 'test' ? 'some-verify-id' : uuid(),

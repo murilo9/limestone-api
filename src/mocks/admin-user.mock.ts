@@ -5,6 +5,7 @@ export const adminUser: User = {
   email: '',
   firstName: '',
   lastName: '',
+  title: '',
   createdBy: null,
   verified: false,
   verifyId: '',

@@ -5,9 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { DatabaseService } from '../database/database.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { DatabaseService } from '../../database/database.service';
+import { User } from '../entities/user.entity';
 
 /**
  * Checks if user is either updating itself or a member of them.
