@@ -15,14 +15,14 @@ import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { IdentityGuard } from '../auth/identity.guard';
-import { CreateUserGuard } from './create-user.guard';
-import { CreateMemberUserGuard } from './create-member-user.guard';
-import { UpdateUserGuard } from './update-user.guard';
+import { CreateUserGuard } from './guards/create-user.guard';
+import { CreateMemberUserGuard } from './guards/create-member-user.guard';
 import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { Request } from 'express';
 import { User } from './entities/user.entity';
 import { ObjectId } from 'mongodb';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserGuard } from './guards/update-user.guard';
 
 @Controller()
 export class UsersController {

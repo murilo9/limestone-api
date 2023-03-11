@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { Observable } from 'rxjs';
-import { DatabaseService } from '../database/database.service';
-import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
-import { SignUpDto } from './dto/signup.dto';
-import { User } from './entities/user.entity';
+import { DatabaseService } from '../../database/database.service';
+import { CreateUserOnSignUpDto } from '../dto/create-user-on-signup.dto';
+import { SignUpDto } from '../dto/signup.dto';
+import { User } from '../entities/user.entity';
 
 /**
  * Ataches admin user ID in the request body, so it could be atached to member's data next.

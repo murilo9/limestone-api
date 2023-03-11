@@ -5,8 +5,8 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { DatabaseService } from '../database/database.service';
-import { SignUpDto } from './dto/signup.dto';
+import { DatabaseService } from '../../database/database.service';
+import { SignUpDto } from '../dto/signup.dto';
 
 /**
  * Verifies is user's e-mail is already registered.
