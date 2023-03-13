@@ -16,7 +16,7 @@ export class ValidationPipe implements PipeTransform {
     const transformed = plainToInstance(this.dtoClass, value, {
       excludeExtraneousValues: true,
     });
-    console.log(this.dtoClass, transformed, value);
+    //console.log(this.dtoClass, transformed, value);
     const errors = await validate(transformed);
 
     if (errors.length) {

@@ -47,13 +47,14 @@ export class UpdateCardGuard implements CanActivate {
     let assigneeExists = true;
     let assigneeBelongsToUsersAdmin = true;
     if (body.assignee) {
-      const cardAssignee = await this.databaseService.findOne<User>('users', {
-        _id: new ObjectId(body.assignee),
-      });
+      const cardAssignee: User | null =
+        await this.databaseService.findOne<User>('users', {
+          _id: new ObjectId(body.assignee),
+        });
       assigneeExists = !!cardAssignee;
       assigneeBelongsToUsersAdmin =
-        cardAssignee.createdBy === user.createdBy ||
-        cardAssignee.createdBy === user._id;
+        cardAssignee?.createdBy === user.createdBy ||
+        cardAssignee?.createdBy === user._id;
     }
     if (!assigneeExists) {
       throw new BadRequestException('Assignee not found');

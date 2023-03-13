@@ -7,9 +7,9 @@ import {
   Post,
   Put,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { IdentityGuard } from '../auth/identity.guard';
+import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
@@ -25,7 +25,7 @@ export class CardsController {
   @UseGuards(IdentityGuard, BoardGuard, CreateCardGuard)
   @Post('boards/:boardId/columns/:columnId/cards')
   create(
-    @Body(new ValidationPipe()) createCardDto: CreateCardDto,
+    @Body(new ValidationPipe(CreateCardDto)) createCardDto: CreateCardDto,
     @Param('columnId') columnId: string,
   ) {
     return this.cardsService.create(createCardDto, columnId);
@@ -41,7 +41,7 @@ export class CardsController {
   @Put('boards/:boardId/columns/:columnId/cards/:cardId')
   update(
     @Param('cardId') cardId: string,
-    @Body(new ValidationPipe()) updateCardDto: UpdateCardDto,
+    @Body(new ValidationPipe(UpdateCardDto)) updateCardDto: UpdateCardDto,
   ) {
     return this.cardsService.update(cardId, updateCardDto);
   }

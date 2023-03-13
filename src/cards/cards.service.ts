@@ -32,6 +32,7 @@ export class CardsService {
     const cardToUpdate = await this.databaseService.findOne<Card>('cards', {
       _id: new ObjectId(cardId),
     });
+    console.log('updatind card', updateCardDto);
     Object.keys(updateCardDto).forEach((key) => {
       cardToUpdate[key] = updateCardDto[key];
     });
