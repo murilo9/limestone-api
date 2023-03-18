@@ -7,10 +7,10 @@ import {
   Post,
   Put,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { IdentityGuard } from '../auth/identity.guard';
 import { BoardGuard } from '../cards/guards/board.guard';
+import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
@@ -22,7 +22,7 @@ export class ColumnsController {
   @UseGuards(IdentityGuard, BoardGuard)
   @Post('boards/:boardId/columns')
   create(
-    @Body(new ValidationPipe()) createColumnDto: CreateColumnDto,
+    @Body(new ValidationPipe(CreateColumnDto)) createColumnDto: CreateColumnDto,
     @Param('boardId') boardId: string,
   ) {
     return this.columnsService.create(createColumnDto, boardId);
@@ -38,7 +38,7 @@ export class ColumnsController {
   @Put('boards/:boardId/columns/:columnId')
   update(
     @Param('columnId') columnId: string,
-    @Body(new ValidationPipe()) updateColumnDto: UpdateColumnDto,
+    @Body(new ValidationPipe(CreateColumnDto)) updateColumnDto: UpdateColumnDto,
   ) {
     return this.columnsService.update(columnId, updateColumnDto);
   }
