@@ -1,6 +1,12 @@
 version: '3'
 services:
-  dev:
+  db:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongo-data_dev:/data/db
+  api:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -11,3 +17,10 @@ services:
     environment:
       NODE_ENV: development
     command: npm run start:dev
+    depends_on:
+      - db
+    links:
+      - db
+volumes:
+  mongo-data_dev:
+    external: false
