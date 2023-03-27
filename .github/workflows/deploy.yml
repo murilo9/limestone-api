@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-      - run: echo "KEY = ${{ secrets.KEY }}"
+      - run: echo "PASSWORD = ${{ secrets.PASSWORD }}, USER = ${{ secrets.USER }}"
       - uses: actions/checkout@master
       - name: copy files via ssh password
         uses: appleboy/ssh-action@master
