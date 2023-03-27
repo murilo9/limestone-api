@@ -19,8 +19,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-          # Copy all files from the repository to the remote server
-          scp -r * ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/api
-
-          # SSH into the remote server and run docker-compose up
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /api && docker-compose up'
+            # Copy all files from the repository to the remote server
+            scp -r * ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/api
+            # SSH into the remote server and run docker-compose up
+            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /api && docker-compose up'
