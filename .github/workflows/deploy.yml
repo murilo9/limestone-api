@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    environment: Production
     steps:
       - run: echo "KEY = ${{ secrets.KEY }}"
       - uses: actions/checkout@master
