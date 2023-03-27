@@ -10,6 +10,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - run: echo "KEY = ${{ secrets.KEY }}"
       - uses: actions/checkout@master
       - name: copy files via ssh password
         uses: appleboy/ssh-action@master
