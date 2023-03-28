@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
+      - name: Debug
+        run: echo ${{ secrets.HOST }} ${{ secrets.USER }} ${{ secrets.PASSWORD }}
       - name: SSH into remote server and deploy
         uses: appleboy/ssh-action@master
         with:
