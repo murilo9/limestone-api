@@ -11,21 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-      - name: Debug
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install sshpass
+        run: sudo apt-get install sshpass
+      - name: Deploy code
         run: |
-          echo "HOST: ${{ secrets.HOST }} USER: ${{ secrets.USERNAME }} PASSWORD: ${{ secrets.PASSWORD }} KEY: ${{ secrets.KEY }}"
-      - name: SSH into remote server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSWORD }}
-          port: 22
-          key: ${{ secrets.KEY }}
-          script: |
-            cd /home/$USER
-            rm -rf limestone-api
-            git clone https://github.com/murilo9/limestone-api.git
-            cd limestone-api
-            git pull
-            docker-compose up -d
+          sshpass -p "${{ secrets.PASSWORD }}" ssh ${{ secrets.USERNAME }}@{{ $secrets.HOST }} "cd /home/$USER && rm -rf limestone-api && git clone https://github.com/murilo9/limestone-api.git && cd limestone-api $$ git pull && docker-compose up -d"
