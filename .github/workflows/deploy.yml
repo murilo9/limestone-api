@@ -11,13 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-      - uses: TapTap21/docker-remote-deployment-action@v1.0
+      - name: SSH into remote server and deploy
+        uses: appleboy/ssh-action@master
         with:
-          remote_docker_host: ${{ secrets.USER }}@${{ secrets.HOST }}
-          ssh_private_key: ${{ secrets.PRIVATE_KEY }}
-          ssh_public_key: ${{ secrets.PUBLIC_KEY }}
-          stack_file_name: docker-compose.yml
-          docker_login_password: ${{ secrets.DOCKER_REPO_PASSWORD }}
-          docker_login_user: ${{ secrets.DOCKER_REPO_USERNAME }}
-          docker_login_registry: ${{ steps.login-ecr.outputs.registry }}
-          args: -p limestone_api_stack up -d
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /home/${{ secrets.USER }}
+            rm -rf limestone-api
+            git clone https://github.com/murilo9/limestone-api.git
+            cd limestone-api
+            git pull
+            docker-compose up -d
