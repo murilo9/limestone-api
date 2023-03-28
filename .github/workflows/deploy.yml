@@ -20,6 +20,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.KEY }}
           script: |
             cd /home/$USER
             rm -rf limestone-api
