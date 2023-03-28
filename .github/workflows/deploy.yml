@@ -17,4 +17,4 @@ jobs:
         run: sudo apt-get install sshpass
       - name: Deploy code
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo $USER"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo $USER"
