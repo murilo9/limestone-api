@@ -9,7 +9,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     volumes:
       - .:/api
     ports:

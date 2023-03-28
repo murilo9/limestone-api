@@ -8,20 +8,14 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      - run: echo "PASSWORD = ${{ secrets.PASSWORD }}, USER = ${{ secrets.USER }}"
-      - uses: actions/checkout@master
-      - name: copy files via ssh password
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
-            # Copy all files from the repository to the remote server
-            scp -r * ${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@${{ secrets.HOST }}:/api
-            # SSH into the remote server and run docker-compose up
-            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /api && docker-compose up'
+    environment: Development
+    uses: TapTap21/docker-remote-deployment-action@v1.0
+    with:
+      remote_docker_host: ${{ secrets.USER }}@${{ secrets.HOST }}
+      ssh_private_key: ${{ secrets.PRIVATE_KEY }}
+      ssh_public_key: ${{ secrets.PUBLIC_KEY }}
+      stack_file_name: docker-compose.yml
+      docker_login_password: ${{ secrets.DOCKER_REPO_PASSWORD }}
+      docker_login_user: ${{ secrets.DOCKER_REPO_USERNAME }}
+      docker_login_registry: ${{ steps.login-ecr.outputs.registry }}
+      args: -p limestone_api_stack up -d
