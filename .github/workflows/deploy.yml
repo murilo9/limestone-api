@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd /home/${{ secrets.USER }}
+            cd /home/$USER
             rm -rf limestone-api
             git clone https://github.com/murilo9/limestone-api.git
             cd limestone-api
