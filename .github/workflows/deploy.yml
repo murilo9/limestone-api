@@ -12,7 +12,8 @@ jobs:
     environment: Production
     steps:
       - name: Debug
-        run: echo "HOST: ${{ secrets.HOST }} USER: ${{ secrets.USER }} PASSWORD: ${{ secrets.PASSWORD }}"
+        run: |
+          echo "HOST: ${{ secrets.HOST }} USER: ${{ secrets.USER }} PASSWORD: ${{ secrets.PASSWORD }}"
       - name: SSH into remote server and deploy
         uses: appleboy/ssh-action@master
         with:
