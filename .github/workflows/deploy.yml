@@ -13,19 +13,4 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "HOST: ${{ secrets.HOST }} USER: ${{ secrets.USERNAME }} PASSWORD: ${{ secrets.PASSWORD }}"
-      - name: SSH into remote server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSWORD }}
-          port: 22
-          key: ${{ secrets.KEY }}
-          script: |
-            cd /home/$USER
-            rm -rf limestone-api
-            git clone https://github.com/murilo9/limestone-api.git
-            cd limestone-api
-            git pull
-            docker-compose up -d
+          ssh ${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@${{ secrets.HOST }} 'echo $USER'
