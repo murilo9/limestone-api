@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

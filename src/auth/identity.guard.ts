@@ -18,7 +18,7 @@ export class IdentityGuard implements CanActivate {
     }>();
     const { access_token } = request.headers;
     try {
-      const user = verify(access_token, 'secret') as User;
+      const user = verify(access_token, 'SECRET') as User;
       request.user = user;
       return true;
     } catch (error) {

@@ -9,6 +9,7 @@ import {
   Put,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { CreateUserOnSignUpDto } from './dto/create-user-on-signup.dto';
 import { SignUpDto } from './dto/signup.dto';
