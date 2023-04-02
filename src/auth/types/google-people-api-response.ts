@@ -8,11 +8,11 @@ export type GooglePeopleApiResponse = {
         type: string;
         id: string;
       };
-      displayName: string;
-      familyName: string;
-      givenName: string;
-      displayNameLastFirst: string;
-      unstructuredName: string;
     };
+    displayName: string;
+    familyName: string;
+    givenName: string;
+    displayNameLastFirst: string;
+    unstructuredName: string;
   }>;
 };

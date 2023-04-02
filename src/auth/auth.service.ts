@@ -41,8 +41,8 @@ export class AuthService {
         );
       }
       const newUserDto: CreateUserOnSignUpDto = {
-        firstName: userName.metadata.givenName,
-        lastName: userName.metadata.familyName,
+        firstName: userName.givenName,
+        lastName: userName.familyName,
         email,
         password: user_id,
       };
