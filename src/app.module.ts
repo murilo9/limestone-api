@@ -6,9 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { CardsModule } from './cards/cards.module';
 import { CardCommentsModule } from './card-comments/card-comments.module';
 import { ColumnsModule } from './columns/columns.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     UsersModule,
     BoardsModule,
     ColumnsModule,
