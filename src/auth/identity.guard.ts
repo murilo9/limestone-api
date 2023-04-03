@@ -24,7 +24,9 @@ export class IdentityGuard implements CanActivate {
       return true;
     } catch (error) {
       console.log(error);
-      throw new UnauthorizedException('Could not validate access_token.');
+      throw new UnauthorizedException(
+        'Could not validate Authorization header.',
+      );
     }
   }
 }
