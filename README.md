@@ -11,3 +11,7 @@
 ### Clear docker-compose
 
 `docker-compose -f docker-compose.<prod|dev> down --clean-orphan`
+
+### Deployment notes
+
+- Make sure the server repository has a proper .env file
