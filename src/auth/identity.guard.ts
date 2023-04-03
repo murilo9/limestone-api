@@ -14,12 +14,12 @@ export class IdentityGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<{
       body: SignInDto;
       user?: User;
-      headers: { access_token: string };
+      headers: { Authorization: string };
     }>();
-    const { access_token } = request.headers;
+    const { Authorization } = request.headers;
     console.log('request.headers', request.headers);
     try {
-      const user = verify(access_token, 'SECRET') as User;
+      const user = verify(Authorization, 'SECRET') as User;
       request.user = user;
       return true;
     } catch (error) {
