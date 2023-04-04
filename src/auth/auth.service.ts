@@ -50,14 +50,18 @@ export class AuthService {
       user = await this.databaseService.findOne<User>('users', { email });
     }
     return {
-      access_token: jwt.sign(user, this.secret),
+      access_token: jwt.sign(user, this.secret, {
+        expiresIn: 3600 * 24 * 3,
+      }),
       user,
     };
   }
 
   async signIn(user: User) {
     return {
-      access_token: jwt.sign(user, this.secret),
+      access_token: jwt.sign(user, this.secret, {
+        expiresIn: 3600 * 24 * 3,
+      }),
       user,
     };
   }

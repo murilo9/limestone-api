@@ -4,9 +4,13 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://limestone.app.br'],
+    origin: [
+      'http://localhost:3000',
+      'localhost:3000',
+      'https://limestone.app.br',
+    ],
     allowedHeaders:
-      'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+      'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe, Authorization',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
   });

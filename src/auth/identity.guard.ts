@@ -17,7 +17,6 @@ export class IdentityGuard implements CanActivate {
       headers: { authorization: string };
     }>();
     const { authorization } = request.headers;
-    console.log('request.headers', request.headers);
     try {
       const user = verify(authorization, 'SECRET') as User;
       request.user = user;
