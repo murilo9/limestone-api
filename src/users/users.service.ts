@@ -17,6 +17,8 @@ import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BoardsService } from '../boards/boards.service';
+import { PasswordRecoveryRequest } from './entities/password-recovery-request';
+import { PasswordRecoveryRequestDto } from './dto/password-recovery-request.dto';
 
 export class UsersService {
   constructor(
@@ -73,7 +75,7 @@ export class UsersService {
       NODE_ENV === 'test' ? 'some-hash' : await bcrypt.hash(password, 10);
 
     const userPassword: Omit<UserPassword, '_id' | 'created' | 'updated'> = {
-      user: NODE_ENV === 'test' ? 'some-user-id' : createdUser._id,
+      user: createdUser._id,
       hash,
     };
     await this.databaseService.insertOne('passwords', userPassword);
@@ -158,5 +160,26 @@ export class UsersService {
       { _id: new ObjectId(id) },
     );
     return `User deactivated successfully`;
+  }
+
+  async passwordRecover(email: string) {
+    const accountExists = await this.databaseService.findOne<User>('users', {
+      email,
+    });
+    if (accountExists) {
+      let recoveryRequest =
+        await this.databaseService.findOne<PasswordRecoveryRequest>(
+          'password-recovery-requests',
+          { email },
+        );
+      if (!recoveryRequest) {
+        recoveryRequest =
+          await this.databaseService.insertOne<PasswordRecoveryRequestDto>(
+            'password-recovery-requests',
+            { email },
+          );
+      }
+      // TODO: send recover email
+    }
   }
 }

@@ -4,6 +4,7 @@ import {
   Db,
   Filter,
   MongoClient,
+  ObjectId,
   OptionalUnlessRequiredId,
   UpdateFilter,
   WithId,
@@ -44,12 +45,14 @@ export class DatabaseService {
   async insertOne<T>(
     collectionName: string,
     entity: T,
-  ): Promise<T & { _id: string }> {
+  ): Promise<T & { _id: ObjectId; created: Date; updated: Date }> {
     const collection = this.db.collection<T>(collectionName);
+    const created = new Date();
+    const updated = new Date();
     const entityToInsert = {
       ...entity,
-      created: new Date(),
-      updated: new Date(),
+      created,
+      updated,
     };
     const query = await collection.insertOne(
       entityToInsert as OptionalUnlessRequiredId<T> & {
@@ -59,7 +62,9 @@ export class DatabaseService {
     );
     const entityInserted = {
       ...entity,
-      _id: query.insertedId.toString(),
+      created,
+      updated,
+      _id: query.insertedId,
     };
     return entityInserted;
   }

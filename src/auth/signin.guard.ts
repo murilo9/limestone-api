@@ -28,7 +28,7 @@ export class SignInGuard implements CanActivate {
     const userPassword = await this.databaseService.findOne<UserPassword>(
       'passwords',
       {
-        user: user._id.toString(),
+        user: user._id,
       },
     );
     if (!userPassword) {

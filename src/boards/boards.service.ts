@@ -41,7 +41,7 @@ export class BoardsService {
     for (const [index, column] of columns.entries()) {
       await this.columnsService.create(
         { title: column, index },
-        createdBoard._id,
+        createdBoard._id.toString(),
       );
     }
     return createdBoard;

@@ -29,6 +29,11 @@ import { UpdateUserGuard } from './guards/update-user.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Post('/password-recover/:email')
+  passwordRecover(@Param('email') email: string) {
+    return this.usersService.passwordRecover(email);
+  }
+
   @UseGuards(CreateUserGuard)
   @Post('/signup')
   signUp(@Body(new ValidationPipe(SignUpDto)) signUpDto: SignUpDto) {
