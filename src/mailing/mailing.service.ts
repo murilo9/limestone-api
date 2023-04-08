@@ -30,7 +30,10 @@ export class MailingService {
       },
     });
     const sendEmailRes = await transporter.sendMail({
-      from: user,
+      from: {
+        name: 'Limestone',
+        address: user,
+      },
       to,
       subject,
       html: text,
