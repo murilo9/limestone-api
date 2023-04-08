@@ -19,10 +19,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { BoardsService } from '../boards/boards.service';
 import { PasswordRecoveryRequest } from './entities/password-recovery-request';
 import { PasswordRecoveryRequestDto } from './dto/password-recovery-request.dto';
+import { MailingService } from '../mailing/mailing.service';
 
 export class UsersService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
+    @Inject(MailingService) private mailingService: MailingService,
     private configService: ConfigService,
   ) {}
 
@@ -181,5 +183,13 @@ export class UsersService {
       }
       // TODO: send recover email
     }
+  }
+
+  async testMail() {
+    this.mailingService.sendMail(
+      'msandressasiqueira@gmail.com',
+      'Greetings from Limestone!',
+      'Hello! We have noted you joined the platform recently. Welcome!',
+    );
   }
 }

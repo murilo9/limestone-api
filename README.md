@@ -15,3 +15,7 @@
 ### Deployment notes
 
 - Make sure the server repository has a proper .env file
+
+### Useful tutorials:
+
+- [Nodemailer Gmail config](https://alexb72.medium.com/how-to-send-emails-using-a-nodemailer-gmail-and-oauth2-fe19d66451f9)

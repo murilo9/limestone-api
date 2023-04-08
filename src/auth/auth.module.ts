@@ -6,12 +6,14 @@ import axios, { Axios } from 'axios';
 import { DatabaseService } from '../database/database.service';
 import { UsersService } from '../users/users.service';
 import { UsersModule } from '../users/users.module';
+import { MailingService } from '../mailing/mailing.service';
 
 @Module({
   imports: [DatabaseModule, UsersModule],
   providers: [
     AuthService,
     UsersService,
+    MailingService,
     {
       provide: Axios,
       useValue: axios,

@@ -84,4 +84,9 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.deactivate(id);
   }
+
+  // @Post('/test-mailing')
+  // testMailing() {
+  //   return this.usersService.testMail();
+  // }
 }
