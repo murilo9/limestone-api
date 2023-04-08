@@ -96,7 +96,7 @@ export class UsersService {
       userToVerify.verified = true;
       userToVerify.verifyId = '';
       await this.databaseService.updateOne('users', userToVerify, { _id });
-      return 'Account verified successfully';
+      return `<h5>Hi, ${userToVerify.firstName}.</h5><p>Your account has been verified successfully.</p>`;
     } else {
       throw new NotFoundException();
     }
