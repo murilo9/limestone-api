@@ -6,9 +6,9 @@ import * as nodemailer from 'nodemailer';
 export class MailingService {
   constructor(@Inject(ConfigService) private configService: ConfigService) {}
 
-  async sendMail(to: string, subject: string, text: string) {
+  async sendMail(template: { to: string; subject: string; text: string }) {
+    const { to, subject, text } = template;
     const user = this.configService.get('MAIL_USER');
-    const pass = this.configService.get('MAIL_PASS');
     const clientId = this.configService.get('GOOGLE_CLIENT_ID');
     const clientSecret = this.configService.get('GOOGLE_CLIENT_SECRET');
     const redirectUrl = this.configService.get('GOOGLE_REDIRECT_URL');
@@ -18,7 +18,6 @@ export class MailingService {
       refresh_token: refreshToken,
     });
     const accessToken = await myOAuth2Client.getAccessToken();
-    console.log(user, pass);
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -34,7 +33,7 @@ export class MailingService {
       from: user,
       to,
       subject,
-      text,
+      html: text,
     });
     console.log('sendEmailRes', sendEmailRes);
   }

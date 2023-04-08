@@ -20,6 +20,7 @@ import { BoardsService } from '../boards/boards.service';
 import { PasswordRecoveryRequest } from './entities/password-recovery-request';
 import { PasswordRecoveryRequestDto } from './dto/password-recovery-request.dto';
 import { MailingService } from '../mailing/mailing.service';
+import { WelcomeEmailTemplate } from '../mailing/templates/welcome';
 
 export class UsersService {
   constructor(
@@ -41,8 +42,11 @@ export class UsersService {
     const NODE_ENV = this.configService.get('NODE_ENV');
     const { email, firstName, lastName } = createUserDto;
     let password = (createUserDto as CreateUserOnSignUpDto).password;
-    // TODO: define a random temporary password, that'll be sent to the user by e-mail
-    password = password || 'random-temporary-password';
+    let createdByAdmin = false;
+    if (!password) {
+      createdByAdmin = true;
+      password = Math.random().toString(36).slice(-8);
+    }
     const newUser: Omit<User, '_id' | 'created' | 'updated'> = {
       email,
       firstName,
@@ -82,7 +86,13 @@ export class UsersService {
     };
     await this.databaseService.insertOne('passwords', userPassword);
 
-    // TODO: send verification email
+    const welcomeMail = new WelcomeEmailTemplate(
+      createdUser.email,
+      createdUser.firstName,
+      createdUser.verifyId,
+      createdByAdmin ? password : null,
+    );
+    await this.mailingService.sendMail(welcomeMail);
 
     return createdUser;
   }
@@ -186,10 +196,10 @@ export class UsersService {
   }
 
   async testMail() {
-    this.mailingService.sendMail(
-      'msandressasiqueira@gmail.com',
-      'Greetings from Limestone!',
-      'Hello! We have noted you joined the platform recently. Welcome!',
-    );
+    this.mailingService.sendMail({
+      to: 'murilohenriquematias@gmail.com',
+      subject: 'Greetings from Limestone!',
+      text: 'Hello! We have noted you joined the platform recently. Welcome!',
+    });
   }
 }
