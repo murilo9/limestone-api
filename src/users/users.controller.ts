@@ -64,7 +64,7 @@ export class UsersController {
     return user;
   }
 
-  @Post('/verify/:id')
+  @Get('/verify/:id')
   verify(@Param('id') id: string) {
     return this.usersService.verify(id);
   }

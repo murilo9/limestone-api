@@ -103,14 +103,13 @@ export class UsersService {
   async verify(verifyId: string) {
     const userToVerify = await this.databaseService.findOne<User>('users', {
       verifyId,
-      active: true,
     });
     if (userToVerify) {
       const { _id } = userToVerify;
       userToVerify.verified = true;
       userToVerify.verifyId = '';
       await this.databaseService.updateOne('users', userToVerify, { _id });
-      return `<h5>Hi, ${userToVerify.firstName}.</h5><p>Your account has been verified successfully.</p>`;
+      return `<h5>Hi, ${userToVerify.firstName}.</h5><p>Your account has been verified successfully. You may now <a href='https://limestone.app.br'> sign in</a></p>`;
     } else {
       throw new NotFoundException();
     }
