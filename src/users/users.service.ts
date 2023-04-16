@@ -103,6 +103,7 @@ export class UsersService {
   async verify(verifyId: string) {
     const userToVerify = await this.databaseService.findOne<User>('users', {
       verifyId,
+      active: true,
     });
     if (userToVerify) {
       const { _id } = userToVerify;
