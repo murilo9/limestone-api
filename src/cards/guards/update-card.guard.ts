@@ -50,6 +50,7 @@ export class UpdateCardGuard implements CanActivate {
       const cardAssignee: User | null =
         await this.databaseService.findOne<User>('users', {
           _id: new ObjectId(body.assignee),
+          active: true,
         });
       assigneeExists = !!cardAssignee;
       assigneeBelongsToUsersAdmin =

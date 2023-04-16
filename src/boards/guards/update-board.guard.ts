@@ -54,6 +54,7 @@ export class UpdateBoardGuard implements CanActivate {
     if (newOwnerId !== boardToUpdate.owner.toString()) {
       const newOwner = await this.databaseService.findOne<User>('users', {
         _id: new ObjectId(newOwnerId),
+        active: true,
       });
       if (!newOwner) {
         throw new NotFoundException('Owner does not exist');

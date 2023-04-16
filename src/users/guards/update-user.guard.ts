@@ -29,8 +29,9 @@ export class UpdateUserGuard implements CanActivate {
     let adminUserIsUpdatingMember = false;
     // Verifies if admin user is updating its member
     if (user.createdBy === null) {
-      const adminMembers = await this.databaseService.findMany('users', {
+      const adminMembers = await this.databaseService.findMany<User>('users', {
         createdBy: new ObjectId(user._id),
+        active: true,
       });
       const updatingUserBelongsToAdmin = adminMembers.find(
         (member) => member._id.toString() === params.id,

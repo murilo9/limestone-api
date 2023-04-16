@@ -24,6 +24,10 @@ import { User } from './entities/user.entity';
 import { ObjectId } from 'mongodb';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserGuard } from './guards/update-user.guard';
+import { PasswordChangeDto } from './dto/password-change.dto';
+import { PasswordChangeGuard } from './guards/password-change.guard';
+import { SignProvider } from './types/sign-provider';
+import { DeactivateAccountDto } from './dto/deactivate-account.dto';
 
 @Controller()
 export class UsersController {
@@ -34,10 +38,23 @@ export class UsersController {
     return this.usersService.passwordRecover(email);
   }
 
+  @UseGuards(IdentityGuard, PasswordChangeGuard)
+  @Post('/password-change')
+  passwordChange(
+    @Req() request: { user: User },
+    @Body(new ValidationPipe(PasswordChangeDto))
+    passwordChangeDto: PasswordChangeDto,
+  ) {
+    const { user } = request;
+    const { newPassword } = passwordChangeDto;
+    const userId = user._id.toString();
+    return this.usersService.passwordChange(userId, newPassword);
+  }
+
   @UseGuards(CreateUserGuard)
   @Post('/signup')
   signUp(@Body(new ValidationPipe(SignUpDto)) signUpDto: SignUpDto) {
-    return this.usersService.create(signUpDto);
+    return this.usersService.create(signUpDto, SignProvider.NONE);
   }
 
   @UseGuards(IdentityGuard)
@@ -67,7 +84,11 @@ export class UsersController {
     createUserDto: CreateUserDto,
     @Req() request: { adminId?: ObjectId },
   ) {
-    return this.usersService.create(createUserDto, request.adminId);
+    return this.usersService.create(
+      createUserDto,
+      SignProvider.NONE,
+      request.adminId,
+    );
   }
 
   @UseGuards(IdentityGuard, UpdateUserGuard)

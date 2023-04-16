@@ -21,7 +21,10 @@ export class SignInGuard implements CanActivate {
       .switchToHttp()
       .getRequest<{ body: SignInDto; user?: User }>();
     const { email, password } = request.body;
-    const user = await this.databaseService.findOne<User>('users', { email });
+    const user = await this.databaseService.findOne<User>('users', {
+      email,
+      active: true,
+    });
     if (!user) {
       throw new UnauthorizedException('Wrong e-mail or password.');
     }

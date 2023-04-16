@@ -7,6 +7,7 @@ import { DatabaseService } from '../database/database.service';
 import { GooglePeopleApiResponse } from './types/google-people-api-response';
 import { CreateUserOnSignUpDto } from '../users/dto/create-user-on-signup.dto';
 import { UsersService } from '../users/users.service';
+import { SignProvider } from '../users/types/sign-provider';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,10 @@ export class AuthService {
       `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${googleAccessToken}`,
     );
     const { user_id, email } = googleApiRes.data;
-    let user = await this.databaseService.findOne<User>('users', { email });
+    let user = await this.databaseService.findOne<User>('users', {
+      email,
+      active: true,
+    });
     // Register user if not registered
     if (!user) {
       const googlePeopleApiRes = await this.axios.get<GooglePeopleApiResponse>(
@@ -46,10 +50,14 @@ export class AuthService {
         email,
         password: user_id,
       };
-      await this.usersService.create(newUserDto);
-      user = await this.databaseService.findOne<User>('users', { email });
+      await this.usersService.create(newUserDto, SignProvider.GOOGLE);
+      user = await this.databaseService.findOne<User>('users', {
+        email,
+        active: true,
+      });
     }
     return {
+      user_id,
       access_token: jwt.sign(user, this.secret, {
         expiresIn: 3600 * 24 * 3,
       }),

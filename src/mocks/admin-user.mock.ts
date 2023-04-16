@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { User } from '../users/entities/user.entity';
+import { SignProvider } from '../users/types/sign-provider';
 
 export const adminUser: User = {
   email: '',
@@ -31,4 +32,5 @@ export const adminUser: User = {
   _id: new ObjectId(0),
   created: undefined,
   updated: undefined,
+  signProvider: SignProvider.NONE,
 };

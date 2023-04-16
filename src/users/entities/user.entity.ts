@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import PersistentEntity from '../../common/types/persistent-entity';
+import { SignProvider } from '../types/sign-provider';
 import { UserNotificationOptions } from '../types/user-notification-options';
 
 export interface User extends PersistentEntity {
@@ -12,4 +13,5 @@ export interface User extends PersistentEntity {
   verifyId: string;
   active: boolean;
   notificationOptions: UserNotificationOptions;
+  signProvider: SignProvider;
 }

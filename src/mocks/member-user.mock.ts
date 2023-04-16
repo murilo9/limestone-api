@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { User } from '../users/entities/user.entity';
+import { SignProvider } from '../users/types/sign-provider';
 import { adminUser } from './admin-user.mock';
 
 export const memberUser: User = {
@@ -32,4 +33,5 @@ export const memberUser: User = {
   _id: new ObjectId(0),
   created: undefined,
   updated: undefined,
+  signProvider: SignProvider.NONE,
 };

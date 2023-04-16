@@ -21,6 +21,7 @@ import { PasswordRecoveryRequest } from './entities/password-recovery-request';
 import { PasswordRecoveryRequestDto } from './dto/password-recovery-request.dto';
 import { MailingService } from '../mailing/mailing.service';
 import { WelcomeEmailTemplate } from '../mailing/templates/welcome';
+import { SignProvider } from './types/sign-provider';
 
 export class UsersService {
   constructor(
@@ -37,11 +38,12 @@ export class UsersService {
    */
   async create(
     createUserDto: CreateUserOnSignUpDto | CreateUserDto,
+    signProvider: SignProvider,
     adminId?: ObjectId,
   ) {
     const NODE_ENV = this.configService.get('NODE_ENV');
     const { email, firstName, lastName } = createUserDto;
-    let password = (createUserDto as CreateUserOnSignUpDto).password;
+    let { password } = createUserDto as CreateUserOnSignUpDto;
     let createdByAdmin = false;
     if (!password) {
       createdByAdmin = true;
@@ -74,6 +76,7 @@ export class UsersService {
           onDelete: true,
         },
       },
+      signProvider,
     };
     const createdUser = await this.databaseService.insertOne('users', newUser);
 
@@ -100,6 +103,7 @@ export class UsersService {
   async verify(verifyId: string) {
     const userToVerify = await this.databaseService.findOne<User>('users', {
       verifyId,
+      active: true,
     });
     if (userToVerify) {
       const { _id } = userToVerify;
@@ -113,11 +117,13 @@ export class UsersService {
   }
 
   async getAll(adminId: string) {
-    const adminUsers = await this.databaseService.findMany('users', {
+    const adminUsers = await this.databaseService.findMany<User>('users', {
       createdBy: new ObjectId(adminId),
+      active: true,
     });
-    const adminUser = await this.databaseService.findOne('users', {
+    const adminUser = await this.databaseService.findOne<User>('users', {
       _id: new ObjectId(adminId),
+      active: true,
     });
     return [...adminUsers, adminUser];
   }
@@ -125,6 +131,7 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto) {
     const userToUpdate = await this.databaseService.findOne<User>('users', {
       _id: new ObjectId(id),
+      active: true,
     });
     if (userToUpdate) {
       Object.keys(updateUserDto).forEach((key) => {
@@ -146,6 +153,7 @@ export class UsersService {
   async deactivate(id: string) {
     const userToDeactivate = await this.databaseService.findOne<User>('users', {
       _id: new ObjectId(id),
+      active: true,
     });
     if (!userToDeactivate) {
       throw new NotFoundException();
@@ -177,6 +185,7 @@ export class UsersService {
   async passwordRecover(email: string) {
     const accountExists = await this.databaseService.findOne<User>('users', {
       email,
+      active: true,
     });
     if (accountExists) {
       let recoveryRequest =
@@ -193,6 +202,19 @@ export class UsersService {
       }
       // TODO: send recover email
     }
+  }
+
+  async passwordChange(userId: string, newPassword: string) {
+    const NODE_ENV = this.configService.get('NODE_ENV');
+    const hash =
+      NODE_ENV === 'test' ? 'some-hash' : await bcrypt.hash(newPassword, 10);
+    await this.databaseService.updateOne(
+      'passwords',
+      { hash },
+      {
+        user: new ObjectId(userId),
+      },
+    );
   }
 
   async testMail() {
